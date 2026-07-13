@@ -3,7 +3,7 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width,initial-scale=1'>
-<title>🌸 ANAKIDS - Sistema Comercial</title>
+<title>🌸 ANAKIDS - Sistema Comercial Profissional</title>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <style>
 :root{--p:#1976d2;--pClaro:#e3f2fd;--d:#1565c0;--bg:#f8fafc;--texto:#2d3748;--sucesso:#2e7d32;--alerta:#f57c00;--erro:#d32f2f;--borda:#e2e8f0;--cinza:#94a3b8}
@@ -37,7 +37,9 @@ button.small{padding:8px 12px;font-size:14px}
 
 .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px;margin-bottom:20px}
 .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:15px}
-.card{background:#fff;padding:18px;border-radius:10px;border:1px solid var(--borda);box-shadow:0 2px 5px rgba(0,0,0,0.03)}
+.card{background:#fff;padding:18px;border-radius:10px;border:1px solid var(--borda);box-shadow:0 2px 5px rgba(0,0,0,0.03);cursor:default}
+.card.clicavel{cursor:pointer;transition:transform 0.2s, box-shadow 0.2s;}
+.card.clicavel:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,0.08)}
 .card span{font-size:13px;color:var(--cinza)}
 .card b{font-size:24px;color:var(--p);display:block;margin-top:5px}
 .card.destaque b{color:var(--alerta)}
@@ -56,6 +58,13 @@ button.small{padding:8px 12px;font-size:14px}
 .destaque-box{background:#fff8e1;border-left:4px solid var(--alerta);padding:12px;border-radius:6px;margin:15px 0}
 .info-box{background:#e6f7ff;border-left:4px solid var(--p);padding:12px;border-radius:6px;margin:15px 0}
 
+.tabela-caixa{width:100%;border-collapse:collapse;margin-top:15px;background:#fff;border-radius:8px;overflow:hidden;border:1px solid var(--borda)}
+.tabela-caixa th,.tabela-caixa td{padding:10px;text-align:left;border-bottom:1px solid var(--borda)}
+.tabela-caixa th{background:var(--pClaro);font-weight:500}
+.tabela-caixa tr:last-child td{border-bottom:none}
+.valor-entrada{color:var(--sucesso);font-weight:500}
+.valor-saida{color:var(--erro);font-weight:500}
+
 .etiqueta-config{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:15px}
 .etiqueta-pagina{display:grid;grid-template-columns:repeat(2,1fr);gap:2mm;padding:3mm;width:100%;max-width:80mm;margin:0 auto}
 .etiqueta{border:1px solid #ddd;padding:1mm 2mm;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:#fff;overflow:hidden;box-sizing:border-box}
@@ -69,12 +78,6 @@ button.small{padding:8px 12px;font-size:14px}
 .caixa-status span{padding:5px 12px;border-radius:20px;font-weight:500;font-size:14px}
 .caixa-abertos{background:#e6f9e6;color:#1b5e20}
 .caixa-fechado{background:#f1f1f1;color:#666}
-.tabela-caixa{width:100%;border-collapse:collapse;margin-top:15px;background:#fff;border-radius:8px;overflow:hidden;border:1px solid var(--borda)}
-.tabela-caixa th,.tabela-caixa td{padding:10px;text-align:left;border-bottom:1px solid var(--borda)}
-.tabela-caixa th{background:var(--pClaro);font-weight:500}
-.tabela-caixa tr:last-child td{border-bottom:none}
-.valor-entrada{color:var(--sucesso);font-weight:500}
-.valor-saida{color:var(--erro);font-weight:500}
 
 .cupom-impressao{max-width:72mm;margin:0 auto;background:#fff;padding:5mm;display:none;box-sizing:border-box;font-family:'Courier New',monospace;line-height:1.3}
 .cupom-cabecalho{text-align:center;margin-bottom:8px}
@@ -91,6 +94,8 @@ button.small{padding:8px 12px;font-size:14px}
 .cupom-pagamento-titulo{font-size:11px;font-weight:bold;margin-bottom:3px}
 .cupom-pagamento-linha{display:flex;justify-content:space-between;font-size:11px;margin:2px 0}
 .cupom-rodape{text-align:center;margin-top:15px;font-size:10px;color:#444}
+
+.historico-compras{margin-top:10px;padding:10px;background:#f8fafc;border-radius:6px;border:1px solid var(--borda);font-size:13px}
 
 @media print{
   @page{size:80mm auto;margin:0;padding:0}
@@ -124,23 +129,23 @@ button.small{padding:8px 12px;font-size:14px}
 <div id='sistema' class='hidden'>
   <div class='sidebar'>
     <div class='sidebar-topo'><h3>🌸 ANAKIDS</h3></div>
-    <button onclick='abrirPagina("painel")' class='ativo'>🏠 Painel Geral</button>
-    <button onclick='abrirPagina("clientes")'>👥 Clientes</button>
-    <button onclick='abrirPagina("produtos")'>📦 Produtos</button>
-    <button onclick='abrirPagina("pdv")'>🛒 PDV / Vendas</button>
-    <button onclick='abrirPagina("caixa")'>💵 Caixa e Vendas</button>
-    <button onclick='abrirPagina("etiquetas")'>🏷️ Etiquetas</button>
-    <button onclick='abrirPagina("config")'>⚙️ Configurações</button>
+    <button id='btn-nav-painel' onclick='abrirPagina("painel")' class='ativo'>🏠 Painel Geral</button>
+    <button id='btn-nav-clientes' onclick='abrirPagina("clientes")'>👥 Clientes</button>
+    <button id='btn-nav-produtos' onclick='abrirPagina("produtos")'>📦 Produtos</button>
+    <button id='btn-nav-pdv' onclick='abrirPagina("pdv")'>🛒 PDV / Vendas</button>
+    <button id='btn-nav-caixa' onclick='abrirPagina("caixa")'>💵 Caixa e Vendas</button>
+    <button id='btn-nav-etiquetas' onclick='abrirPagina("etiquetas")'>🏷️ Etiquetas</button>
+    <button id='btn-nav-config' onclick='abrirPagina("config")'>⚙️ Configurações</button>
   </div>
 
   <div class='main'>
     <div id='pag-painel' class='pagina'>
       <h1 class='titulo-pagina'>🏠 Painel Geral</h1>
       <div class='grid-2'>
-        <div class='card'><span>Produtos Cadastrados</span><b id='qtdProdutos'>0</b></div>
-        <div class='card'><span>Clientes Cadastrados</span><b id='qtdClientes'>0</b></div>
-        <div class='card destaque'><span>Alertas de Estoque Baixo</span><b id='qtdEstoqueBaixo'>0</b></div>
-        <div class='card verde'><span>Saldo em Caixa</span><b id='saldoCaixa'>R$ 0,00</b></div>
+        <div class='card clicavel' onclick='abrirPagina("produtos")'><span>Produtos Cadastrados</span><b id='qtdProdutos'>0</b></div>
+        <div class='card clicavel' onclick='abrirPagina("clientes")'><span>Clientes Cadastrados</span><b id='qtdClientes'>0</b></div>
+        <div class='card destaque clicavel' onclick='abrirPagina("produtos", "baixo-estoque")'><span>Alertas de Estoque Baixo</span><b id='qtdEstoqueBaixo'>0</b></div>
+        <div class='card verde clicavel' onclick='abrirPagina("caixa")'><span>Saldo em Caixa</span><b id='saldoCaixa'>R$ 0,00</b></div>
       </div>
       <div id='listaAniversarios' class='info-box hidden' style='margin-top:20px'>
         <p><strong>🎂 Clientes aniversariantes dos próximos 15 dias:</strong></p>
@@ -149,15 +154,13 @@ button.small{padding:8px 12px;font-size:14px}
     </div>
 
     <div id='pag-clientes' class='pagina hidden'>
-      <h1 class='titulo-pagina'>👥 Cadastro de Clientes</h1>
+      <h1 class='titulo-pagina'>👥 Cadastro e Gestão de Clientes</h1>
       <input placeholder='🔍 Buscar cliente por nome ou CPF...' id='buscaCliente' oninput='listarClientes()'>
       <div class='grid-form'>
         <div><label class='rotulo'>Nome do Cliente</label><input id='clienteNome' required></div>
         <div><label class='rotulo'>CPF</label><input id='clienteCpf' placeholder='000.000.000-00'></div>
         <div><label class='rotulo'>Telefone / WhatsApp</label><input id='clienteContato' placeholder='(00) 00000-0000'></div>
-        <div><label class='rotulo'>Dia Aniversário</label>
-          <select id='aniversarioDia' required><option value=''>Escolha</option></select>
-        </div>
+        <div><label class='rotulo'>Dia Aniversário</label><select id='aniversarioDia' required><option value=''>Escolha</option></select></div>
         <div><label class='rotulo'>Mês Aniversário</label>
           <select id='aniversarioMes' required>
             <option value=''>Escolha</option>
@@ -200,27 +203,27 @@ button.small{padding:8px 12px;font-size:14px}
 
     <div id='pag-pdv' class='pagina hidden'>
       <h1 class='titulo-pagina'>🛒 Ponto de Venda (PDV)</h1>
-      <div class='destaque-box'><p>💡 Modo Automação: Posicione o cursor no campo abaixo e bipe com o leitor óptico.</p></div>
-      <input id='campoLeitura' placeholder='Bipe o código de barras ou digite...' autocomplete='off' autofocus onkeypress='if(event.key==="Enter"){adicionarItemVenda();}'>
+      <input id='campoLeitura' placeholder='Bipe o código de barras ou digite...' autocomplete='off' onkeypress='if(event.key==="Enter"){adicionarItemVenda();}'>
       <div id='itensVenda' style='margin:20px 0;background:#fff;padding:15px;border-radius:8px;border:1px solid var(--borda)'>
         <h4>Produtos na Venda Corrente</h4>
         <div id='listaItensVenda'><p style='color:var(--cinza)'>Nenhum item adicionado</p></div>
       </div>
+      
+      <div class='card' style='margin-bottom: 15px; background: #fafafa;'>
+        <h4>💰 Divisão do Pagamento</h4>
+        <div class='grid-form' style='margin-top: 10px;'>
+          <div><label class='rotulo'>Valor em Dinheiro R$</label><input type='number' step='0.01' id='vendaPgDinheiro' value='0' oninput='recalcularRestante()'></div>
+          <div><label class='rotulo'>Valor em Pix R$</label><input type='number' step='0.01' id='vendaPgPix' value='0' oninput='recalcularRestante()'></div>
+          <div><label class='rotulo'>Valor no Cartão R$</label><input type='number' step='0.01' id='vendaPgCartao' value='0' oninput='recalcularRestante()'></div>
+          <div><label class='rotulo'>Ainda Resta Pagar</label><input type='text' id='vendaPgRestante' value='R$ 0,00' readonly style='font-weight: bold; color: var(--erro);'></div>
+        </div>
+      </div>
+
       <div class='grid-3'>
-        <div><label class='rotulo'>Forma de Pagamento</label>
-          <select id='formaPagamento'>
-            <option value='dinheiro'>Dinheiro</option>
-            <option value='pix'>Pix</option>
-            <option value='credito'>Cartão de Crédito</option>
-            <option value='debito'>Cartão de Débito</option>
-          </select>
-        </div>
-        <div><label class='rotulo'>Vincular Cliente (Opcional)</label>
-          <select id='vendaCliente'><option value=''>Consumidor Final</option></select>
-        </div>
+        <div><label class='rotulo'>Vincular Cliente (Opcional)</label><select id='vendaCliente'><option value=''>Consumidor Final</option></select></div>
         <div><label class='rotulo'>Observações da Venda</label><input id='obsVenda' placeholder='Ex: Embalagem para presente...'></div>
       </div>
-      <div id='totalVenda' style='font-size:22px;font-weight:bold;margin:15px 0'>Total: R$ 0,00</div>
+      <div id='totalVenda' style='font-size:24px;font-weight:bold;margin:15px 0'>Total Geral: R$ 0,00</div>
       <div class='grupo-botoes'>
         <button onclick='finalizarVenda()' class='sucesso'>✅ Finalizar e Emitir Cupom</button>
         <button onclick='limparVenda()' class='erro'>Cancelar Venda</button>
@@ -228,33 +231,53 @@ button.small{padding:8px 12px;font-size:14px}
     </div>
 
     <div id='pag-caixa' class='pagina hidden'>
-      <h1 class='titulo-pagina'>💵 Controle de Caixa e Vendas</h1>
+      <h1 class='titulo-pagina'>💵 Controle de Caixa Profissional</h1>
       <div class='caixa-status'>
         <strong>Status Operacional:</strong>
         <span id='statusCaixaSpan' class='caixa-fechado'>Caixa Fechado</span>
       </div>
+      
       <div id='aberturaCaixaArea' class='card' style='margin-bottom:20px'>
-        <h3>Abertura de Turno</h3>
-        <div class='grid-form'>
-          <div><label class='rotulo'>Fundo de Caixa Inicial R$</label><input type='number' step='0.01' id='saldoInicial' value='0.00'></div>
+        <h3>🔓 Abertura de Turno</h3>
+        <div class='grid-form' style='margin-top: 10px;'>
+          <div><label class='rotulo'>Fundo de Caixa Inicial (Troco em Dinheiro) R$</label><input type='number' step='0.01' id='saldoInicial' value='0.00'></div>
         </div>
-        <button onclick='abrirCaixa()' class='sucesso'>🔓 Abrir Caixa</button>
+        <button onclick='abrirCaixa()' class='sucesso'>Abrir Caixa para Vendas</button>
       </div>
+
       <div id='movimentoCaixa' class='hidden'>
         <div class='grid-2'>
-          <div class='card'><span>Fundo Inicial</span><b id='saldoInicialMostra'>R$ 0,00</b></div>
-          <div class='card'><span>Total Entradas</span><b class='valor-entrada' id='totalEntradas'>R$ 0,00</b></div>
-          <div class='card'><span>Total Saídas (Sangrias)</span><b class='valor-saida' id='totalSaidas'>R$ 0,00</b></div>
-          <div class='card destaque'><span>Saldo Atual em Dinheiro</span><b id='saldoAtual'>R$ 0,00</b></div>
+          <div class='card' style='background: #f0fdf4;'><span>Faturamento Total Bruto</span><b id='cxFaturamento' style='color: var(--sucesso);'>R$ 0,00</b></div>
+          <div class='card' style='background: #fffaf0;'><span>Lucro Líquido Estimado</span><b id='cxLucroReal' style='color: var(--alerta);'>R$ 0,00</b></div>
         </div>
+
+        <div class='card' style='margin:20px 0;'>
+          <h4>Fluxo Atual do Caixa Físico (Dinheiro em Mãos)</h4>
+          <div class='grid-3' style='margin-top:10px;'>
+            <div><span>(+) Fundo Inicial:</span><br><strong id='lblFundoFisico'>R$ 0,00</strong></div>
+            <div><span>(+) Entradas Dinheiro:</span><br><strong id='lblEntradasFisico' style='color:var(--sucesso)'>R$ 0,00</strong></div>
+            <div><span>(-) Sangrias/Saídas:</span><br><strong id='lblSaidasFisico' style='color:var(--erro)'>R$ 0,00</strong></div>
+            <div><span>(=) Saldo Dinheiro Estimado:</span><br><strong id='lblTotalFisico' style='color:var(--p)'>R$ 0,00</strong></div>
+          </div>
+        </div>
+
         <div class='card' style='margin:20px 0'>
-          <h4>Fluxo de Caixa (Ajuste Manual / Sangria)</h4>
+          <h4>➕ Lançar Suprimento (Troco) ou Sangria (Retirada)</h4>
           <div class='grid-form'>
             <div><label class='rotulo'>Operação</label><select id='tipoLancamento'><option value='entrada'>Entrada (Suprimento)</option><option value='saida'>Saída (Sangria)</option></select></div>
             <div><label class='rotulo'>Valor R$</label><input type='number' step='0.01' id='valorLancamento'></div>
-            <div><label class='rotulo'>Motivo / Descrição</label><input id='descricaoLancamento' placeholder='Ex: Troco em moedas, Pagamento fornecedor...'></div>
+            <div><label class='rotulo'>Motivo</label><input id='descricaoLancamento' placeholder='Ex: Compra de material, Sangria de segurança...'></div>
           </div>
-          <button onclick='registrarLancamento()' class='small'>➕ Registrar Lançamento</button>
+          <button onclick='registrarLancamento()' class='small'>Registrar Movimentação</button>
+        </div>
+
+        <div class='card' style='margin:20px 0; background: #fff5f5; border-color: #feb2b2;'>
+          <h4>🔒 Fechamento de Turno com Conferência Cega</h4>
+          <p style='font-size: 13px; color: #4a5568; margin-bottom: 10px;'>Digite o valor total em dinheiro que você tem em mãos no cofre/gaveta para conferir com o sistema.</p>
+          <div class='grid-form'>
+            <div><label class='rotulo'>Valor Físico Contado na Gaveta R$</label><input type='number' step='0.01' id='cxFechamentoContado' placeholder='0.00'></div>
+          </div>
+          <button onclick='fecharCaixa()' class='erro'>Conferir e Fechar Caixa</button>
         </div>
         
         <h3>Movimentações do Turno Atual</h3>
@@ -265,37 +288,21 @@ button.small{padding:8px 12px;font-size:14px}
 
         <h3>Histórico Analítico de Vendas (Hoje)</h3>
         <table class='tabela-caixa'>
-          <thead><tr><th>Nº Venda</th><th>Hora</th><th>Itens</th><th>Forma Pag.</th><th>Total</th></tr></thead>
+          <thead><tr><th>Nº Venda</th><th>Hora</th><th>Cliente</th><th>Pagamento</th><th>Total</th></tr></thead>
           <tbody id='tabelaHistoricoVendas'></tbody>
         </table>
-
-        <div class='grupo-botoes' style='margin-top:20px'>
-          <button onclick='fecharCaixa()' class='erro'>🔒 Fechar Caixa e Encerrar Turno</button>
-          <button onclick='imprimirRelatorioCaixa()' class='alerta'>🖨️ Imprimir Fechamento</button>
-        </div>
       </div>
     </div>
 
     <div id='pag-etiquetas' class='pagina hidden'>
-      <h1 class='titulo-pagina'>🏷️ Emissor de Etiquetas com Código de Barras</h1>
+      <h1 class='titulo-pagina'>🏷️ Emissor de Etiquetas</h1>
       <div class='etiqueta-config'>
         <div><label class='rotulo'>Código do Produto</label><input id='etqCodigo' placeholder='Bipe ou digite o código' autocomplete='off'></div>
         <div><label class='rotulo'>Quantidade de Cópias</label><input type='number' min='1' value='1' id='etqQtd'></div>
-        <div><label class='rotulo'>Gabarito / Tamanho</label>
-          <select id='etqTamanho' onchange='mudarTamanho()'>
-            <option value='38x25'>38 x 25 mm (Padrão Pimaco)</option>
-            <option value='40x30'>40 x 30 mm</option>
-            <option value='50x30'>50 x 30 mm</option>
-            <option value='personalizado'>Personalizado</option>
+        <div><label class='rotulo'>Gabarito</label>
+          <select id='etqTamanho'>
+            <option value='38x25'>38 x 25 mm</option>
           </select>
-        </div>
-        <div id='areaPersonalizado' class='hidden'>
-          <label class='rotulo'>Largura x Altura (mm)</label>
-          <div style='display:flex;gap:5px'>
-            <input type='number' min='20' max='100' value='38' id='etqLargura' style='flex:1'>
-            <span>x</span>
-            <input type='number' min='15' max='80' value='25' id='etqAltura' style='flex:1'>
-          </div>
         </div>
         <div><label class='rotulo'>Exibir Marca?</label>
           <select id='etqMarca'><option value='sim'>Sim</option><option value='nao'>Não</option></select>
@@ -303,33 +310,21 @@ button.small{padding:8px 12px;font-size:14px}
       </div>
       <div class='grupo-botoes'>
         <button onclick='gerarPreview()' class='sucesso'>👁️ Gerar Lote de Etiquetas</button>
-        <button onclick='imprimirEtiquetas()' class='alerta'>🖨️ Imprimir Etiquetas</button>
+        <button onclick='imprimirEtiquetas()' class='alerta'>🖨️ Imprimir</button>
       </div>
       <div id='previewEtiquetas' class='hidden' style='margin-top:20px'></div>
     </div>
 
     <div id='pag-config' class='pagina hidden'>
-      <h1 class='titulo-pagina'>⚙️ Configurações e Segurança</h1>
+      <h1 class='titulo-pagina'>⚙️ Configurações</h1>
       <div class='grid-form'>
-        <div><label class='rotulo'>Razão Social / Nome da Loja</label><input id='configNome' value='ANAKIDS MODA INFANTIL'></div>
+        <div><label class='rotulo'>Razão Social</label><input id='configNome' value='ANAKIDS MODA INFANTIL'></div>
         <div><label class='rotulo'>CNPJ</label><input id='configCnpj' value='00.000.000/0000-00'></div>
-        <div><label class='rotulo'>Endereço Comercial</label><input id='configEndereco' value='Fortaleza, Ceará'></div>
-        <div><label class='rotulo'>Telefone de Contato</label><input id='configTelefone' value='(85) 99999-9999'></div>
-        <div><label class='rotulo'>Mensagem do Rodapé do Cupom</label><input id='configRodape' value='Obrigado pela preferência! Volte sempre!'></div>
+        <div><label class='rotulo'>Endereço</label><input id='configEndereco' value='Fortaleza, Ceará'></div>
+        <div><label class='rotulo'>Telefone</label><input id='configTelefone' value='(85) 99999-9999'></div>
+        <div><label class='rotulo'>Rodapé do Cupom</label><input id='configRodape' value='Obrigado pela preferência! Volte sempre!'></div>
       </div>
-      <button onclick='salvarConfig()' class='sucesso' style='margin-bottom: 25px;'>💾 Salvar Configurações</button>
-      
-      <hr style='border:0; border-top: 1px solid var(--borda); margin: 20px 0;'>
-      
-      <div class='card' style='background: #fff5f5; border-color: #feb2b2;'>
-        <h3 style='color: var(--erro); margin-bottom: 5px;'>🛡️ Gestão de Backups do Sistema</h3>
-        <p style='color: var(--texto); font-size: 13px; margin-bottom: 12px;'>Os dados deste ERP ficam salvos de forma segura no seu navegador. Para evitar acidentes ou formatações, exporte o backup regularmente.</p>
-        <div style='display: flex; gap: 10px; flex-wrap: wrap;'>
-          <button onclick='exportarDados()' class='alerta'>📥 Baixar Arquivo de Backup (.json)</button>
-          <button onclick='document.getElementById("inputImportar").click()' class='secundario'>📤 Restaurar Arquivo de Backup</button>
-          <input type='file' id='inputImportar' class='hidden' accept='.json' onchange='importarDados(event)'>
-        </div>
-      </div>
+      <button onclick='salvarConfig()' class='sucesso'>💾 Salvar Configurações</button>
     </div>
   </div>
 </div>
@@ -339,7 +334,7 @@ button.small{padding:8px 12px;font-size:14px}
 <script>
 let db = JSON.parse(localStorage.getItem('dbAnakids') || `{
   "produtos": [],
-  "criancas": [],
+  "clientes": [],
   "vendas": [],
   "caixaAberto": null,
   "historicoCaixa": [],
@@ -351,10 +346,6 @@ let db = JSON.parse(localStorage.getItem('dbAnakids') || `{
     "rodape": "Obrigado pela preferência! Volte sempre!"
   }
 }`);
-
-// Migração automática de dados legados do padrão anterior se houver
-if(!db.clientes && db.criancas) { db.clientes = db.criancas; }
-if(!db.clientes) { db.clientes = []; }
 
 let carrinho = [];
 let numeroCupom = db.vendas.length + 1;
@@ -381,7 +372,7 @@ function entrarSistema(){
     listarClientes();
     listarProdutos();
     atualizarSelectClientesVenda();
-  }else mostrarMensagem('Erro','Usuário ou senha incorretos!','erro');
+  } else mostrarMensagem('Erro','Usuário ou senha incorretos!','erro');
 }
 
 function preencherDiasMes(){
@@ -390,17 +381,24 @@ function preencherDiasMes(){
   for(let i=1;i<=31;i++) selDia.innerHTML += `<option value="${i}">${String(i).padStart(2,'0')}</option>`;
 }
 
-function abrirPagina(nome){
+function abrirPagina(nome, filtro=''){
   document.querySelectorAll('.pagina').forEach(p=>p.classList.add('hidden'));
   document.querySelectorAll('.sidebar button').forEach(b=>b.classList.remove('ativo'));
   document.getElementById(`pag-${nome}`).classList.remove('hidden');
-  if(event && event.target && event.target.tagName === 'BUTTON') event.target.classList.add('ativo');
+  
+  let btn = document.getElementById(`btn-nav-${nome}`);
+  if(btn) btn.classList.add('ativo');
+
+  if(nome === 'produtos' && filtro === 'baixo-estoque'){
+    document.getElementById('buscaProd').value = '';
+    listarProdutos(true);
+  } else if(nome === 'produtos'){
+    listarProdutos(false);
+  }
+
   if(nome === 'pdv') {
     atualizarSelectClientesVenda();
-    setTimeout(() => {
-      let input = document.getElementById('campoLeitura');
-      if(input) { input.value = ''; input.focus(); }
-    }, 50);
+    setTimeout(() => { document.getElementById('campoLeitura').focus(); }, 50);
   }
 }
 
@@ -411,18 +409,6 @@ function atualizarPainel(){
   let estoqueBaixo = db.produtos.filter(p => p.estoque <= (p.estoqueMinimo || 3)).length;
   document.getElementById('qtdEstoqueBaixo').textContent = estoqueBaixo;
   
-  let hoje = new Date();
-  let proximos = db.clientes.filter(c=>{
-    let aniv = new Date(hoje.getFullYear(), c.aniversarioMes-1, c.aniversarioDia);
-    if(aniv < hoje) aniv.setFullYear(hoje.getFullYear()+1);
-    let diff = Math.ceil((aniv - hoje)/(1000*60*60*24));
-    return diff >=0 && diff <=15;
-  });
-  document.getElementById('qtdAniversarios').textContent = proximos.length;
-  if(proximos.length>0){
-    document.getElementById('listaAniversarios').classList.remove('hidden');
-    document.getElementById('aniversariantesLista').innerHTML = proximos.map(c=>`• ${c.nome} - dia ${String(c.aniversarioDia).padStart(2,'0')}/${String(c.aniversarioMes).padStart(2,'0')}`).join('<br>');
-  }else document.getElementById('listaAniversarios').classList.add('hidden');
   let saldo = db.caixaAberto ? db.caixaAberto.saldoAtual : 0;
   document.getElementById('saldoCaixa').textContent = saldo.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 }
@@ -441,7 +427,7 @@ function salvarConfig(){
   db.configLoja.telefone = document.getElementById('configTelefone').value.trim();
   db.configLoja.rodape = document.getElementById('configRodape').value.trim();
   salvarDB();
-  mostrarMensagem('Sucesso','Configurações da empresa atualizadas!');
+  mostrarMensagem('Sucesso','Configurações atualizadas!');
 }
 
 function salvarCliente(){
@@ -453,9 +439,7 @@ function salvarCliente(){
     aniversarioDia: parseInt(document.getElementById('aniversarioDia').value) || 0,
     aniversarioMes: parseInt(document.getElementById('aniversarioMes').value) || 0
   };
-  if(!novo.nome){
-    mostrarMensagem('Erro','O nome do cliente é obrigatório!','erro');return;
-  }
+  if(!novo.nome){ mostrarMensagem('Erro','O nome do cliente é obrigatório!','erro'); return; }
   db.clientes.push(novo);
   salvarDB();
   limparCliente();
@@ -463,18 +447,32 @@ function salvarCliente(){
   mostrarMensagem('Sucesso','Cliente cadastrado com sucesso!');
 }
 function limparCliente(){document.querySelectorAll('#pag-clientes input, #pag-clientes select').forEach(i=>i.value='')}
+
 function listarClientes(){
   let busca = document.getElementById('buscaCliente').value.trim().toLowerCase();
   let filtradas = db.clientes.filter(c=>c.nome.toLowerCase().includes(busca) || (c.clienteCpf && c.clienteCpf.includes(busca)));
-  let html = filtradas.map(c=>`
-    <div class='lista-item'>
-      <div class='lista-dados'>
-        <strong>${c.nome}</strong>
-        <br><small>CPF: ${c.clienteCpf || 'Não Informado'} • Tel: ${c.contato || 'Sem telefone'} ${c.aniversarioDia ? `• Aniv: ${String(c.aniversarioDia).padStart(2,'0')}/${String(c.aniversarioMes).padStart(2,'0')}` : ''}</small>
+  
+  let html = filtradas.map(c=>{
+    let compras = db.vendas.filter(v => v.cliente === c.nome);
+    let totalGasto = compras.reduce((sum, v) => sum + v.total, 0);
+    
+    let histHtml = compras.length > 0 
+      ? `<div class="historico-compras">🛍️ <b>Histórico de Compras:</b> ${compras.length} compras realizada(s) | Total Consumido: <b>${totalGasto.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</b></div>`
+      : `<div class="historico-compras" style="color:var(--cinza);">Nenhuma compra registrada neste CPF ainda.</div>`;
+
+    return `
+      <div class='lista-item' style="display:block;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class='lista-dados'>
+            <strong>${c.nome}</strong>
+            <br><small>CPF: ${c.clienteCpf || 'Não Informado'} • Tel: ${c.contato || 'Sem telefone'}</small>
+          </div>
+          <button class='pequeno erro' onclick='excluirCliente(${c.id})'>Excluir</button>
+        </div>
+        ${histHtml}
       </div>
-      <button class='pequeno erro' onclick='excluirCliente(${c.id})'>Excluir</button>
-    </div>
-  `).join('');
+    `;
+  }).join('');
   document.getElementById('listaClientes').innerHTML = html || '<p style="color:var(--cinza)">Nenhum cliente localizado</p>';
 }
 function excluirCliente(id){db.clientes = db.clientes.filter(c=>c.id!==id);salvarDB();listarClientes()}
@@ -509,22 +507,28 @@ function salvarProduto(){
   mostrarMensagem('Sucesso','Produto catalogado!');
 }
 function limparProduto(){document.querySelectorAll('#pag-produtos input').forEach(i=>i.value='')}
-function listarProdutos(){
+
+function listarProdutos(apenasBaixoEstoque = false){
   let busca = document.getElementById('buscaProd').value.trim().toLowerCase();
   let filtrados = db.produtos.filter(p=>p.nome.toLowerCase().includes(busca) || p.codigo.includes(busca));
+  
+  if(apenasBaixoEstoque){
+    filtrados = filtrados.filter(p => p.estoque <= (p.estoqueMinimo || 3));
+  }
+
   let html = filtrados.map(p=>{
     let critico = p.estoque <= p.estoqueMinimo;
     return `
       <div class='lista-item' style='${critico ? "border-left: 4px solid var(--alerta);" : ""}'>
         <div class='lista-dados'>
           <strong>${p.nome} ${p.tamanho ? `(${p.tamanho})` : ''}</strong>
-          <br><small>Cód: ${p.codigo} • Preço: R$ ${p.precoVenda.toFixed(2)} • <span style="${critico ? "color:var(--erro);font-weight:bold;" : ""}">Est: ${p.estoque} un (Mín: ${p.estoqueMinimo})</span></small>
+          <br><small>Cód: ${p.codigo} • Preço: R$ ${p.precoVenda.toFixed(2)} • <span style="${critico ? "color:var(--erro);font-weight:bold;" : ""}">Estoque: ${p.estoque} un (Mín: ${p.estoqueMinimo})</span></small>
         </div>
         <button class='pequeno erro' onclick='excluirProduto("${p.codigo}")'>Excluir</button>
       </div>
     `;
   }).join('');
-  document.getElementById('listaProdutos').innerHTML = html || '<p style="color:var(--cinza)">Nenhum produto cadastrado</p>';
+  document.getElementById('listaProdutos').innerHTML = html || '<p style="color:var(--cinza)">Nenhum produto localizado</p>';
 }
 function excluirProduto(cod){db.produtos = db.produtos.filter(p=>p.codigo!==cod);salvarDB();listarProdutos()}
 
@@ -547,22 +551,37 @@ function abrirCaixa(){
   db.caixaAberto = {
     dataAbertura: new Date().toISOString(),
     saldoInicial: saldoInicial,
-    saldoAtual: saldoInicial,
-    entradas: 0,
-    saidas: 0,
+    saldoAtual: saldoInicial, 
+    entradasFisicas: 0,
+    saidasFisicas: 0,
     movimentos: []
   };
   salvarDB();
   verificarStatusCaixa();
   mostrarMensagem('Sucesso','Turno de caixa iniciado!');
 }
+
 function atualizarDadosCaixa(){
   let cx = db.caixaAberto;
   if(!cx) return;
-  document.getElementById('saldoInicialMostra').textContent = cx.saldoInicial.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  document.getElementById('totalEntradas').textContent = cx.entradas.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  document.getElementById('totalSaidas').textContent = cx.saidas.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  document.getElementById('saldoAtual').textContent = cx.saldoAtual.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+
+  let hojeStr = new Date().toISOString().slice(0, 10);
+  let vendasHoje = db.vendas.filter(v => v.data.slice(0,10) === hojeStr);
+
+  let faturamentoTotal = vendasHoje.reduce((acc, v) => acc + v.total, 0);
+  let custoTotal = vendasHoje.reduce((acc, v) => {
+    let custoVenda = v.itens.reduce((sum, item) => sum + (item.precoCusto || 0), 0);
+    return acc + custoVenda;
+  }, 0);
+  let lucroReal = faturamentoTotal - custoTotal;
+
+  document.getElementById('cxFaturamento').textContent = faturamentoTotal.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  document.getElementById('cxLucroReal').textContent = lucroReal.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+
+  document.getElementById('lblFundoFisico').textContent = cx.saldoInicial.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  document.getElementById('lblEntradasFisico').textContent = cx.entradasFisicas.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  document.getElementById('lblSaidasFisico').textContent = cx.saidasFisicas.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  document.getElementById('lblTotalFisico').textContent = cx.saldoAtual.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
   
   let htmlMovs = cx.movimentos.map(m=>`
     <tr>
@@ -574,14 +593,12 @@ function atualizarDadosCaixa(){
   `).join('');
   document.getElementById('tabelaMovimento').innerHTML = htmlMovs;
 
-  let hojeStr = new Date().toISOString().slice(0, 10);
-  let vendasHoje = db.vendas.filter(v => v.data.slice(0,10) === hojeStr);
   let htmlVendas = vendasHoje.map(v => `
     <tr>
       <td>#${String(v.numero).padStart(4,'0')}</td>
       <td>${new Date(v.data).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</td>
-      <td><small>${v.itens.map(i => i.nome).join(', ')}</small></td>
-      <td><span class="badge amarelo">${v.formaPagamento.toUpperCase()}</span></td>
+      <td>${v.cliente || 'Consumidor Final'}</td>
+      <td><small>${Object.entries(v.pagamentos).filter(([_, val])=>val>0).map(([key, val])=>`${key.toUpperCase()}: R$${val.toFixed(2)}`).join(' | ')}</small></td>
       <td><strong>${v.total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</strong></td>
     </tr>
   `).join('');
@@ -594,26 +611,45 @@ function registrarLancamento(){
   let valor = parseFloat(document.getElementById('valorLancamento').value || 0);
   let desc = document.getElementById('descricaoLancamento').value.trim() || 'Ajuste manual';
   if(valor<=0){mostrarMensagem('Erro','Valor inválido!','erro');return}
+  
   db.caixaAberto.movimentos.push({hora:new Date().toISOString(), tipo:tipo, valor:valor, descricao:desc});
-  if(tipo==='entrada'){db.caixaAberto.entradas += valor;db.caixaAberto.saldoAtual += valor}
-  else{db.caixaAberto.saidas += valor;db.caixaAberto.saldoAtual -= valor}
+  if(tipo==='entrada'){
+    db.caixaAberto.entradasFisicas += valor;
+    db.caixaAberto.saldoAtual += valor;
+  } else {
+    db.caixaAberto.saidasFisicas += valor;
+    db.caixaAberto.saldoAtual -= valor;
+  }
   salvarDB();
   atualizarDadosCaixa();
   document.getElementById('valorLancamento').value='';document.getElementById('descricaoLancamento').value='';
-  mostrarMensagem('Sucesso','Movimento lançado financeiramente!');
+  mostrarMensagem('Sucesso','Movimentação física de dinheiro registrada!');
 }
+
 function fecharCaixa(){
   if(!db.caixaAberto) return;
-  if(confirm(`Encerrar turno e fechar caixa? Saldo em Dinheiro: ${db.caixaAberto.saldoAtual.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`)){
+  let contado = parseFloat(document.getElementById('cxFechamentoContado').value || 0);
+  let esperado = db.caixaAberto.saldoAtual;
+  let diferenca = contado - esperado;
+
+  let msgConferência = `Fechamento de Caixa:\n\n` +
+    `Saldo Esperado em Dinheiro: R$ ${esperado.toFixed(2)}\n` +
+    `Saldo Informado em Dinheiro: R$ ${contado.toFixed(2)}\n` +
+    `Diferença: R$ ${diferenca.toFixed(2)} ` + (diferenca === 0 ? "(Caixa Perfeito!)" : diferenca > 0 ? "(Sobrou Dinheiro)" : "(Faltou Dinheiro)") + 
+    `\n\nConfirma o encerramento do turno?`;
+
+  if(confirm(msgConferência)){
     db.caixaAberto.dataFechamento = new Date().toISOString();
+    db.caixaAberto.valorContadoGaveta = contado;
+    db.caixaAberto.diferencaFechamento = diferenca;
     db.historicoCaixa.push(JSON.parse(JSON.stringify(db.caixaAberto)));
     db.caixaAberto = null;
     salvarDB();
     verificarStatusCaixa();
-    mostrarMensagem('Sucesso','Caixa fechado com sucesso!');
+    document.getElementById('cxFechamentoContado').value = '';
+    mostrarMensagem('Sucesso','Turno encerrado e auditado!');
   }
 }
-function imprimirRelatorioCaixa(){if(db.caixaAberto) window.print()}
 
 function atualizarSelectClientesVenda(){
   let select = document.getElementById('vendaCliente');
@@ -623,25 +659,130 @@ function atualizarSelectClientesVenda(){
   });
 }
 
-function gerarCupom(total, formaPag, obs, clienteSelect){
+function adicionarItemVenda(){
+  let field = document.getElementById('campoLeitura');
+  let cod = field.value.trim();
+  if(!cod) return;
+  
+  let prod = db.produtos.find(p=>p.codigo === cod);
+  if(!prod){
+    mostrarMensagem('Erro','Produto não catalogado!','erro');
+    field.value = ''; return;
+  }
+  
+  let qtdNoCarrinho = carrinho.filter(item => item.codigo === cod).length;
+  if(prod.estoque <= qtdNoCarrinho){
+    mostrarMensagem('Erro',`Estoque indisponível (${prod.estoque} un)!`,'erro');
+    field.value = ''; return;
+  }
+  
+  carrinho.push(prod);
+  atualizarCarrinho();
+  field.value = '';
+}
+
+function atualizarCarrinho(){
+  let total = carrinho.reduce((s,i)=>s + i.precoVenda,0);
+  document.getElementById('listaItensVenda').innerHTML = carrinho.map((i,idx)=>`
+    <div style='display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #eee'>
+      <span>${i.nome.substring(0,30)}</span>
+      <div>
+        <span style="font-weight:bold; margin-right:10px;">R$ ${i.precoVenda.toFixed(2)}</span>
+        <button class='pequeno erro' onclick='removerItemCarrinho(${idx})'>❌</button>
+      </div>
+    </div>
+  `).join('') || '<p style="color:var(--cinza)">Aguardando mercadorias...</p>';
+  document.getElementById('totalVenda').textContent = `Total Geral: ${total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`;
+  
+  document.getElementById('vendaPgDinheiro').value = total.toFixed(2);
+  document.getElementById('vendaPgPix').value = "0.00";
+  document.getElementById('vendaPgCartao').value = "0.00";
+  recalcularRestante();
+}
+
+function removerItemCarrinho(index){ carrinho.splice(index, 1); atualizarCarrinho(); }
+
+function recalcularRestante(){
+  let total = carrinho.reduce((s,i)=>s + i.precoVenda,0);
+  let din = parseFloat(document.getElementById('vendaPgDinheiro').value || 0);
+  let pix = parseFloat(document.getElementById('vendaPgPix').value || 0);
+  let cartao = parseFloat(document.getElementById('vendaPgCartao').value || 0);
+  
+  let restante = total - (din + pix + cartao);
+  document.getElementById('vendaPgRestante').value = restante.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  if(Math.abs(restante) < 0.01) {
+    document.getElementById('vendaPgRestante').style.color = 'var(--sucesso)';
+  } else {
+    document.getElementById('vendaPgRestante').style.color = 'var(--erro)';
+  }
+}
+
+function limparVenda(){ carrinho=[]; atualizarCarrinho(); }
+
+function finalizarVenda(){
+  if(carrinho.length===0){mostrarMensagem('Erro','Carrinho vazio!','erro');return}
+  if(!db.caixaAberto){mostrarMensagem('Erro','Abra o caixa antes de vender!','erro');return}
+  
+  let totalVenda = carrinho.reduce((s,i)=>s+i.precoVenda,0);
+  let din = parseFloat(document.getElementById('vendaPgDinheiro').value || 0);
+  let pix = parseFloat(document.getElementById('vendaPgPix').value || 0);
+  let cartao = parseFloat(document.getElementById('vendaPgCartao').value || 0);
+  
+  let restante = totalVenda - (din + pix + cartao);
+  if(Math.abs(restante) > 0.01){
+    mostrarMensagem('Erro', 'A soma dos pagamentos não bate com o Total da Venda!', 'erro'); return;
+  }
+
+  carrinho.forEach(i=>{let p=db.produtos.find(x=>x.codigo===i.codigo);if(p)p.estoque--});
+  
+  if(din > 0){
+    db.caixaAberto.movimentos.push({hora:new Date().toISOString(), tipo:'entrada', valor:din, descricao:`Venda #${numeroCupom} (Fração Dinheiro)`});
+    db.caixaAberto.entradasFisicas += din;
+    db.caixaAberto.saldoAtual += din;
+  }
+
+  let clie = document.getElementById('vendaCliente').value;
+  let obs = document.getElementById('obsVenda').value.trim();
+  
+  db.vendas.push({
+    numero: numeroCupom,
+    data: new Date().toISOString(),
+    itens: carrinho,
+    total: totalVenda,
+    pagamentos: { dinheiro: din, pix: pix, cartao: cartao },
+    cliente: clie
+  });
+
+  salvarDB();
+  atualizarDadosCaixa();
+  listarProdutos();
+  gerarCupom(totalVenda, {dinheiro:din, pix:pix, cartao:cartao}, obs, clie);
+  setTimeout(()=>window.print(), 300);
+  mostrarMensagem('Sucesso','Venda realizada!');
+  limparVenda();
+}
+
+function gerarCupom(total, pags, obs, clienteSelect){
   const loja = db.configLoja;
   const data = new Date().toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
   const itensHtml = carrinho.map(item=>`
     <tr>
-      <td>${item.nome.substring(0,22)}${item.nome.length>22?'...':''}</td>
+      <td>${item.nome.substring(0,22)}</td>
       <td style="text-align:right">1x</td>
-      <td style="text-align:right">${item.precoVenda.toFixed(2)}</td>
       <td style="text-align:right">${item.precoVenda.toFixed(2)}</td>
     </tr>
   `).join('');
-  const formaTexto = {dinheiro:'Dinheiro',pix:'Pix',credito:'Crédito',debito:'Débito'}[formaPag];
+
+  let pagamentosLinhas = '';
+  if(pags.dinheiro > 0) pagamentosLinhas += `<div class="cupom-pagamento-linha"><span>Dinheiro:</span><span>R$ ${pags.dinheiro.toFixed(2)}</span></div>`;
+  if(pags.pix > 0) pagamentosLinhas += `<div class="cupom-pagamento-linha"><span>Pix:</span><span>R$ ${pags.pix.toFixed(2)}</span></div>`;
+  if(pags.cartao > 0) pagamentosLinhas += `<div class="cupom-pagamento-linha"><span>Cartão:</span><span>R$ ${pags.cartao.toFixed(2)}</span></div>`;
 
   const cupomHtml = `
     <div class="cupom-cabecalho">
       <div class="cupom-nome">${loja.nome}</div>
       <div class="cupom-dados">CNPJ: ${loja.cnpj}</div>
       <div class="cupom-dados">${loja.endereco}</div>
-      <div class="cupom-dados">Tel: ${loja.telefone}</div>
     </div>
     <div class="cupom-linha"></div>
     <div class="cupom-identificacao">
@@ -651,19 +792,14 @@ function gerarCupom(total, formaPag, obs, clienteSelect){
     </div>
     <div class="cupom-linha"></div>
     <table class="cupom-tabela">
-      <thead><tr><th>ITEM</th><th style="text-align:right">QTD</th><th style="text-align:right">V.UN</th><th style="text-align:right">TOTAL</th></tr></thead>
       <tbody>${itensHtml}</tbody>
     </table>
     <div class="cupom-linha"></div>
-    <div class="cupom-total">
-      <div class="cupom-total-linha"><span>SUBTOTAL</span><span>R$ ${total.toFixed(2)}</span></div>
-      <div class="cupom-total-linha" style="color:var(--sucesso)"><span>TOTAL</span><span>R$ ${total.toFixed(2)}</span></div>
-    </div>
+    <div class="cupom-total-linha"><span>TOTAL</span><span>R$ ${total.toFixed(2)}</span></div>
     <div class="cupom-pagamento">
-      <div class="cupom-pagamento-titulo">MODALIDADE DE PAGAMENTO</div>
-      <div class="cupom-pagamento-linha"><span>${formaTexto}</span><span>R$ ${total.toFixed(2)}</span></div>
+      ${pagamentosLinhas}
     </div>
-    ${obs?`<div style="font-size:10px;margin:8px 0">Obs: ${obs}</div>`:''}
+    ${obs?`<div style="font-size:10px;">Obs: ${obs}</div>`:''}
     <div class="cupom-linha"></div>
     <div class="cupom-rodape">${loja.rodape}</div>
   `;
@@ -671,82 +807,11 @@ function gerarCupom(total, formaPag, obs, clienteSelect){
   numeroCupom++;
 }
 
-function adicionarItemVenda(){
-  let field = document.getElementById('campoLeitura');
-  let cod = field.value.trim();
-  if(!cod) return;
-  
-  let prod = db.produtos.find(p=>p.codigo === cod);
-  if(!prod){
-    mostrarMensagem('Erro','Produto não catalogado no sistema!','erro');
-    field.value = '';
-    return;
-  }
-  
-  let qtdNoCarrinho = carrinho.filter(item => item.codigo === cod).length;
-  if(prod.estoque <= qtdNoCarrinho){
-    mostrarMensagem('Erro',`Estoque indisponível! Bloqueado no limite de ${prod.estoque} un.`,'erro');
-    field.value = '';
-    return;
-  }
-  
-  carrinho.push(prod);
-  atualizarCarrinho();
-  field.value = '';
-  field.focus();
-}
-
-function atualizarCarrinho(){
-  let total = carrinho.reduce((s,i)=>s + i.precoVenda,0);
-  document.getElementById('listaItensVenda').innerHTML = carrinho.map((i,idx)=>`
-    <div style='display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #eee'>
-      <span>${i.nome.substring(0,25)} ${i.tamanho ? `[${i.tamanho}]` : ''}</span>
-      <div>
-        <span style="font-weight:bold; margin-right:10px;">R$ ${i.precoVenda.toFixed(2)}</span>
-        <button class='pequeno erro' onclick='removerItemCarrinho(${idx})'>❌</button>
-      </div>
-    </div>
-  `).join('') || '<p style="color:var(--cinza)">Caixa livre para leitura de mercadorias...</p>';
-  document.getElementById('totalVenda').textContent = `Total: ${total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`;
-}
-
-function removerItemCarrinho(index){
-  carrinho.splice(index, 1);
-  atualizarCarrinho();
-  document.getElementById('campoLeitura').focus();
-}
-
-function limparVenda(){carrinho=[];atualizarCarrinho();document.getElementById('campoLeitura').value='';document.getElementById('campoLeitura').focus()}
-
-function finalizarVenda(){
-  if(carrinho.length===0){mostrarMensagem('Erro','O carrinho de compras está vazio!','erro');return}
-  if(!db.caixaAberto){mostrarMensagem('Erro','Abra o caixa antes de operar vendas!','erro');return}
-  let totalVenda = carrinho.reduce((s,i)=>s+i.precoVenda,0);
-  let formaPag = document.getElementById('formaPagamento').value;
-  let clie = document.getElementById('vendaCliente').value;
-  let obs = document.getElementById('obsVenda').value.trim();
-  
-  carrinho.forEach(i=>{let p=db.produtos.find(x=>x.codigo===i.codigo);if(p)p.estoque--});
-  db.caixaAberto.movimentos.push({hora:new Date().toISOString(), tipo:'entrada', valor:totalVenda, descricao:`Venda Nº ${numeroCupom} - ${formaPag.toUpperCase()}`});
-  db.caixaAberto.entradas += totalVenda;
-  db.caixaAberto.saldoAtual += totalVenda;
-  db.vendas.push({numero:numeroCupom,data:new Date().toISOString(),itens:carrinho,total:totalVenda,formaPagamento:formaPag,cliente:clie});
-  salvarDB();
-  atualizarDadosCaixa();
-  listarProdutos();
-  gerarCupom(totalVenda, formaPag, obs, clie);
-  setTimeout(()=>window.print(), 300);
-  mostrarMensagem('Sucesso','Operação finalizada!');
-  limparVenda();
-}
-
-function mudarTamanho(){document.getElementById('areaPersonalizado').classList.toggle('hidden', document.getElementById('etqTamanho').value !== 'personalizado')}
-
 function gerarPreview(){
   let cod = document.getElementById('etqCodigo').value.trim();
   let qtd = parseInt(document.getElementById('etqQtd').value || 1);
   let prod = db.produtos.find(p=>p.codigo === cod);
-  if(!prod){mostrarMensagem('Erro','Código de produto inválido!','erro');return}
+  if(!prod){mostrarMensagem('Erro','Código inválido!','erro');return}
   let mostrarMarca = document.getElementById('etqMarca').value === 'sim';
   let htmlEtiquetas = '';
   for(let i=0;i<qtd;i++){
@@ -754,7 +819,6 @@ function gerarPreview(){
       <div class='etiqueta'>
         <div class='et-nome'>${prod.nome}</div>
         ${mostrarMarca && prod.marca?`<div class='et-marca'>${prod.marca}</div>`:''}
-        ${prod.tamanho?`<div class='et-dados'>Tam: ${prod.tamanho} • ${prod.cor||''}</div>`:''}
         <div class='et-preco'>R$ ${prod.precoVenda.toFixed(2)}</div>
         <svg class='et-codigo' jsbarcode-format="CODE128" jsbarcode-value="${prod.codigo}" jsbarcode-textmargin="0" jsbarcode-fontsize="8"></svg>
       </div>
@@ -766,48 +830,8 @@ function gerarPreview(){
 }
 
 function imprimirEtiquetas(){
-  if(document.getElementById('previewEtiquetas').innerHTML.trim() !== ''){
-    window.print();
-  }else{
-    mostrarMensagem('Erro','Gere a visualização das etiquetas primeiro!','erro');
-  }
-}
-
-function exportarDados() {
-  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
-  const downloadAnchor = document.createElement('a');
-  downloadAnchor.setAttribute("href", dataStr);
-  downloadAnchor.setAttribute("download", `backup_sistema_${new Date().toISOString().slice(0,10)}.json`);
-  document.body.appendChild(downloadAnchor);
-  downloadAnchor.click();
-  downloadAnchor.remove();
-  mostrarMensagem('Sucesso', 'Arquivo gerado e baixado!');
-}
-
-function importarDados(event) {
-  const arquivo = event.target.files[0];
-  if (!arquivo) return;
-  const leitor = new FileReader();
-  leitor.onload = function(e) {
-    try {
-      const dadosImportados = JSON.parse(e.target.result);
-      if (dadosImportados.produtos && (dadosImportados.clientes || dadosImportados.criancas)) {
-        db = dadosImportados;
-        if(!db.clientes && db.criancas) db.clientes = db.criancas;
-        salvarDB();
-        carregarConfig();
-        verificarStatusCaixa();
-        listarProdutos();
-        listarClientes();
-        mostrarMensagem('Sucesso', 'Base de dados restaurada!');
-      } else {
-        mostrarMensagem('Erro', 'Formato JSON incompatível.', 'erro');
-      }
-    } catch (err) {
-      mostrarMensagem('Erro', 'Falha estrutural ao decodificar o arquivo.', 'erro');
-    }
-  };
-  leitor.readAsText(arquivo);
+  if(document.getElementById('previewEtiquetas').innerHTML.trim() !== '') window.print();
+  else mostrarMensagem('Erro','Gere o lote primeiro!','erro');
 }
 </script>
 </body>
