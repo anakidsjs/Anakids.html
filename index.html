@@ -5,6 +5,8 @@
 <meta name='viewport' content='width=device-width,initial-scale=1'>
 <title>🌸 ANAKIDS - Sistema Comercial Profissional</title>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+<!-- Biblioteca para gerar o QR Code na tela -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 :root{--p:#1976d2;--pClaro:#e3f2fd;--d:#1565c0;--bg:#f8fafc;--texto:#2d3748;--sucesso:#2e7d32;--alerta:#f57c00;--erro:#d32f2f;--borda:#e2e8f0;--cinza:#94a3b8}
 *{box-sizing:border-box;font-family:'Segoe UI',sans-serif;margin:0;padding:0}
@@ -101,6 +103,21 @@ button.small{padding:8px 12px;font-size:14px}
 .container-busca-pdv input {margin:0;flex:1}
 .container-busca-pdv button {margin:0;height:45px;white-space:nowrap}
 
+/* Box do QR Code do Pix na tela */
+.container-pix-qrcode {
+  background: #f0fdf4;
+  border: 1px dashed #bbf7d0;
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 15px;
+  text-align: center;
+}
+.box-qrcode {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
+
 @media print{
   @page{size:auto;margin:0;padding:0}
   body *{visibility:hidden !important}
@@ -151,10 +168,6 @@ button.small{padding:8px 12px;font-size:14px}
         <div class='card clicavel' onclick='abrirPagina("clientes")'><span>Clientes Cadastrados</span><b id='qtdClientes'>0</b></div>
         <div class='card destaque clicavel' onclick='abrirPagina("produtos", "baixo-estoque")'><span>Alertas de Estoque Baixo</span><b id='qtdEstoqueBaixo'>0</b></div>
         <div class='card verde clicavel' onclick='abrirPagina("caixa")'><span>Saldo em Caixa</span><b id='saldoCaixa'>R$ 0,00</b></div>
-      </div>
-      <div id='listaAniversarios' class='info-box hidden' style='margin-top:20px'>
-        <p><strong>🎂 Clientes aniversariantes dos próximos 15 dias:</strong></p>
-        <div id='aniversariantesLista'></div>
       </div>
     </div>
 
@@ -223,9 +236,16 @@ button.small{padding:8px 12px;font-size:14px}
         <h4>💰 Divisão do Pagamento</h4>
         <div class='grid-form' style='margin-top: 10px;'>
           <div><label class='rotulo'>Valor em Dinheiro R$</label><input type='number' step='0.01' id='vendaPgDinheiro' value='0' oninput='recalcularRestante()'></div>
-          <div><label class='rotulo'>Valor em Pix R$</label><input type='number' step='0.01' id='vendaPgPix' value='0' oninput='recalcularRestante()'></div>
+          <div><label class='rotulo'>Valor em Pix R$</label><input type='number' step='0.01' id='vendaPgPix' value='0' oninput='recalcularRestante();gerarPixQrCode();'></div>
           <div><label class='rotulo'>Valor no Cartão R$</label><input type='number' step='0.01' id='vendaPgCartao' value='0' oninput='recalcularRestante()'></div>
           <div><label class='rotulo'>Ainda Resta Pagar</label><input type='text' id='vendaPgRestante' value='R$ 0,00' readonly style='font-weight: bold; color: var(--erro);'></div>
+        </div>
+
+        <!-- Div Dinâmica do QR Code Pix -->
+        <div id="areaPixQrCode" class="container-pix-qrcode hidden">
+          <p style="color:var(--sucesso); font-weight:bold;">📱 Escaneie para pagar via PIX</p>
+          <div class="box-qrcode" id="qrcodeCanvas"></div>
+          <small style="color:#4a5568; word-break: break-all; display:block; margin-top:5px;" id="textoPixCopiaCola"></small>
         </div>
       </div>
 
@@ -278,7 +298,6 @@ button.small{padding:8px 12px;font-size:14px}
 
         <div class='card' style='margin:20px 0; background: #fff5f5; border-color: #feb2b2;'>
           <h4>🔒 Fechamento de Turno com Conferência Cega</h4>
-          <p style='font-size: 13px; color: #4a5568; margin-bottom: 10px;'>Digite o valor total em dinheiro que você tem em mãos no cofre/gaveta para conferir com o sistema.</p>
           <div class='grid-form'>
             <div><label class='rotulo'>Valor Físico Contado na Gaveta R$</label><input type='number' step='0.01' id='cxFechamentoContado' placeholder='0.00'></div>
           </div>
@@ -335,9 +354,11 @@ button.small{padding:8px 12px;font-size:14px}
         <div><label class='rotulo'>CNPJ</label><input id='configCnpj' value='00.000.000/0000-00'></div>
         <div><label class='rotulo'>Endereço</label><input id='configEndereco' value='Fortaleza, Ceará'></div>
         <div><label class='rotulo'>Telefone</label><input id='configTelefone' value='(85) 99999-9999'></div>
+        <div><label class='rotulo'>Chave PIX da Loja</label><input id='configPixChave' placeholder='Celular, CNPJ, E-mail ou Aleatória'></div>
+        <div><label class='rotulo'>Nome do Beneficiário Pix</label><input id='configPixNome' placeholder='Nome completo ou Razão Social'></div>
         <div><label class='rotulo'>Rodapé do Cupom</label><input id='configRodape' value='Obrigado pela preferência! Volte sempre!'></div>
       </div>
-      <button onclick='salvarConfig()' class='sucesso'>💾 Salvar Configurações</button>
+      <button onclick='saveConfigCompleto()' class='sucesso'>💾 Salvar Configurações</button>
     </div>
   </div>
 </div>
@@ -356,12 +377,15 @@ let db = JSON.parse(localStorage.getItem('dbAnakids') || `{
     "cnpj": "00.000.000/0000-00",
     "endereco": "Fortaleza, Ceará",
     "telefone": "(85) 99999-9999",
-    "rodape": "Obrigado pela preferência! Volte sempre!"
+    "rodape": "Obrigado pela preferência! Volte sempre!",
+    "pixChave": "",
+    "pixNome": ""
   }
 }`);
 
 let carrinho = [];
 let numeroCupom = db.vendas.length + 1;
+let qrcodeGerador = null;
 
 function salvarDB(){localStorage.setItem('dbAnakids', JSON.stringify(db));atualizarPainel()}
 function mostrarMensagem(titulo, texto, tipo='sucesso'){
@@ -435,16 +459,20 @@ function carregarConfig(){
   document.getElementById('configCnpj').value = db.configLoja.cnpj;
   document.getElementById('configEndereco').value = db.configLoja.endereco;
   document.getElementById('configTelefone').value = db.configLoja.telefone;
+  document.getElementById('configPixChave').value = db.configLoja.pixChave || '';
+  document.getElementById('configPixNome').value = db.configLoja.pixNome || '';
   document.getElementById('configRodape').value = db.configLoja.rodape;
 }
-function salvarConfig(){
+function saveConfigCompleto(){
   db.configLoja.nome = document.getElementById('configNome').value.trim();
   db.configLoja.cnpj = document.getElementById('configCnpj').value.trim();
   db.configLoja.endereco = document.getElementById('configEndereco').value.trim();
   db.configLoja.telefone = document.getElementById('configTelefone').value.trim();
+  db.configLoja.pixChave = document.getElementById('configPixChave').value.trim();
+  db.configLoja.pixNome = document.getElementById('configPixNome').value.trim();
   db.configLoja.rodape = document.getElementById('configRodape').value.trim();
   salvarDB();
-  mostrarMensagem('Sucesso','Configurações updated!');
+  mostrarMensagem('Sucesso','Configurações salvas!');
 }
 
 function salvarCliente(){
@@ -716,6 +744,7 @@ function atualizarCarrinho(){
   document.getElementById('vendaPgPix').value = "0.00";
   document.getElementById('vendaPgCartao').value = "0.00";
   recalcularRestante();
+  gerarPixQrCode();
 }
 
 function removerItemCarrinho(index){ carrinho.splice(index, 1); atualizarCarrinho(); }
@@ -733,6 +762,65 @@ function recalcularRestante(){
   } else {
     document.getElementById('vendaPgRestante').style.color = 'var(--erro)';
   }
+}
+
+/* Função Algorítmica Estrutural para Gerar o Código Copia e Cola do PIX Dinamicamente */
+function criarPayloadPix(chave, nome, valor, cidade = "FORTALEZA") {
+  function formatarCampo(id, valorCampo) {
+    let len = String(valorCampo).length.toString().padStart(2, '0');
+    return id + len + valorCampo;
+  }
+  
+  let gui = "br.gov.bcb.pix";
+  let infoAdicional = formatarCampo("00", gui) + formatarCampo("01", chave);
+  let payload = "000201" + formatarCampo("26", infoAdicional) + "52040000" + "5303986";
+  
+  if (valor > 0) {
+    payload += formatarCampo("54", valor.toFixed(2));
+  }
+  
+  payload += "5802BR" + formatarCampo("59", nome.toUpperCase()) + formatarCampo("60", cidade.toUpperCase()) + "62070503***";
+  payload += "6304";
+  
+  // Cálculo de CRC16 básico do padrão Pix
+  let crc = 0xFFFF;
+  for (let c = 0; c < payload.length; c++) {
+    crc ^= payload.charCodeAt(c) << 8;
+    for (let i = 0; i < 8; i++) {
+      if (crc & 0x8000) crc = (crc << 1) ^ 0x1021;
+      else crc <<= 1;
+    }
+  }
+  crc = (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+  return payload + crc;
+}
+
+function gerarPixQrCode(){
+  let valorPix = parseFloat(document.getElementById('vendaPgPix').value || 0);
+  let container = document.getElementById('areaPixQrCode');
+  let canvasDiv = document.getElementById('qrcodeCanvas');
+  let textCopy = document.getElementById('textoPixCopiaCola');
+
+  if(valorPix <= 0 || !db.configLoja.pixChave || !db.configLoja.pixNome) {
+    container.classList.add('hidden');
+    canvasDiv.innerHTML = '';
+    return;
+  }
+
+  container.classList.remove('hidden');
+  canvasDiv.innerHTML = '';
+
+  let stringPix = criarPayloadPix(db.configLoja.pixChave, db.configLoja.pixNome, valorPix);
+  textCopy.textContent = stringPix;
+
+  qrcodeGerador = new QRCode(canvasDiv, {
+    text: stringPix,
+    width: 180,
+    height: 180,
+    colorDark : "#000000",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.M
+  });
 }
 
 function limparVenda(){ carrinho=[]; atualizarCarrinho(); }
@@ -854,3 +942,4 @@ function imprimirEtiquetas(){
 </script>
 </body>
 </html>
+
