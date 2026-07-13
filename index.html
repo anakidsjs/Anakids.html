@@ -3,7 +3,7 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width,initial-scale=1'>
-<title>🌸 ANAKIDS - Sistema de Vendas</title>
+<title>🌸 ANAKIDS - Sistema Comercial</title>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <style>
 :root{--p:#1976d2;--pClaro:#e3f2fd;--d:#1565c0;--bg:#f8fafc;--texto:#2d3748;--sucesso:#2e7d32;--alerta:#f57c00;--erro:#d32f2f;--borda:#e2e8f0;--cinza:#94a3b8}
@@ -114,7 +114,7 @@ button.small{padding:8px 12px;font-size:14px}
 
 <div id='telaLogin' class='login'>
   <div class='box-login'>
-    <h2>🌸 ANAKIDS</h2>
+    <h2>🌸 ANAKIDS ERP</h2>
     <input id='usuario' placeholder='Usuário' autocomplete='off'>
     <input id='senha' type='password' placeholder='Senha'>
     <button onclick='entrarSistema()'>Acessar Sistema</button>
@@ -124,11 +124,11 @@ button.small{padding:8px 12px;font-size:14px}
 <div id='sistema' class='hidden'>
   <div class='sidebar'>
     <div class='sidebar-topo'><h3>🌸 ANAKIDS</h3></div>
-    <button onclick='abrirPagina("painel")' class='ativo'>🏠 Painel</button>
-    <button onclick='abrirPagina("criancas")'>👶 Crianças</button>
+    <button onclick='abrirPagina("painel")' class='ativo'>🏠 Painel Geral</button>
+    <button onclick='abrirPagina("clientes")'>👥 Clientes</button>
     <button onclick='abrirPagina("produtos")'>📦 Produtos</button>
-    <button onclick='abrirPagina("pdv")'>🛒 Vendas</button>
-    <button onclick='abrirPagina("caixa")'>💵 Controle de Caixa</button>
+    <button onclick='abrirPagina("pdv")'>🛒 PDV / Vendas</button>
+    <button onclick='abrirPagina("caixa")'>💵 Caixa e Vendas</button>
     <button onclick='abrirPagina("etiquetas")'>🏷️ Etiquetas</button>
     <button onclick='abrirPagina("config")'>⚙️ Configurações</button>
   </div>
@@ -138,27 +138,27 @@ button.small{padding:8px 12px;font-size:14px}
       <h1 class='titulo-pagina'>🏠 Painel Geral</h1>
       <div class='grid-2'>
         <div class='card'><span>Produtos Cadastrados</span><b id='qtdProdutos'>0</b></div>
-        <div class='card'><span>Crianças Cadastradas</span><b id='qtdCriancas'>0</b></div>
-        <div class='card destaque'><span>Próximos Aniversários</span><b id='qtdAniversarios'>0</b></div>
-        <div class='card verde'><span>Saldo do Caixa</span><b id='saldoCaixa'>R$ 0,00</b></div>
+        <div class='card'><span>Clientes Cadastrados</span><b id='qtdClientes'>0</b></div>
+        <div class='card destaque'><span>Alertas de Estoque Baixo</span><b id='qtdEstoqueBaixo'>0</b></div>
+        <div class='card verde'><span>Saldo em Caixa</span><b id='saldoCaixa'>R$ 0,00</b></div>
       </div>
       <div id='listaAniversarios' class='info-box hidden' style='margin-top:20px'>
-        <p><strong>🎂 Aniversariantes dos próximos 15 dias:</strong></p>
+        <p><strong>🎂 Clientes aniversariantes dos próximos 15 dias:</strong></p>
         <div id='aniversariantesLista'></div>
       </div>
     </div>
 
-    <div id='pag-criancas' class='pagina hidden'>
-      <h1 class='titulo-pagina'>👶 Cadastro de Crianças</h1>
-      <input placeholder='🔍 Buscar por nome...' id='buscaCrianca' oninput='listarCriancas()'>
+    <div id='pag-clientes' class='pagina hidden'>
+      <h1 class='titulo-pagina'>👥 Cadastro de Clientes</h1>
+      <input placeholder='🔍 Buscar cliente por nome ou CPF...' id='buscaCliente' oninput='listarClientes()'>
       <div class='grid-form'>
-        <div><label class='rotulo'>Nome Completo</label><input id='criancaNome' required></div>
-        <div><label class='rotulo'>Dia do Aniversário</label>
-          <select id='aniversarioDia' required>
-            <option value=''>Escolha</option>
-          </select>
+        <div><label class='rotulo'>Nome do Cliente</label><input id='clienteNome' required></div>
+        <div><label class='rotulo'>CPF</label><input id='clienteCpf' placeholder='000.000.000-00'></div>
+        <div><label class='rotulo'>Telefone / WhatsApp</label><input id='clienteContato' placeholder='(00) 00000-0000'></div>
+        <div><label class='rotulo'>Dia Aniversário</label>
+          <select id='aniversarioDia' required><option value=''>Escolha</option></select>
         </div>
-        <div><label class='rotulo'>Mês do Aniversário</label>
+        <div><label class='rotulo'>Mês Aniversário</label>
           <select id='aniversarioMes' required>
             <option value=''>Escolha</option>
             <option value='1'>Janeiro</option><option value='2'>Fevereiro</option><option value='3'>Março</option>
@@ -167,45 +167,43 @@ button.small{padding:8px 12px;font-size:14px}
             <option value='10'>Outubro</option><option value='11'>Novembro</option><option value='12'>Dezembro</option>
           </select>
         </div>
-        <div><label class='rotulo'>Responsável</label><input id='responsavel'></div>
-        <div><label class='rotulo'>Contato</label><input id='contato'></div>
       </div>
       <div class='grupo-botoes'>
-        <button onclick='salvarCrianca()' class='sucesso'>💾 Salvar</button>
-        <button onclick='limparCrianca()' class='secundario'>Limpar</button>
+        <button onclick='salvarCliente()' class='sucesso'>💾 Salvar Cadastro</button>
+        <button onclick='limparCliente()' class='secundario'>Limpar</button>
       </div>
-      <div id='listaCriancas' style='margin-top:20px'></div>
+      <div id='listaClientes' style='margin-top:20px'></div>
     </div>
 
     <div id='pag-produtos' class='pagina hidden'>
       <h1 class='titulo-pagina'>📦 Cadastro de Produtos</h1>
-      <input placeholder='🔍 Buscar...' id='buscaProd' oninput='listarProdutos()'>
+      <input placeholder='🔍 Buscar por nome ou código...' id='buscaProd' oninput='listarProdutos()'>
       <div class='grid-form'>
         <div><label class='rotulo'>Nome do Produto</label><input id='prodNome' required></div>
         <div><label class='rotulo'>Código de Barras</label><input id='prodCodigo' required autocomplete='off'></div>
         <div><label class='rotulo'>Marca</label><input id='prodMarca'></div>
         <div><label class='rotulo'>Categoria</label><input id='prodCategoria'></div>
-        <div><label class='rotulo'>Tamanho/Idade</label><input id='prodTamanho'></div>
+        <div><label class='rotulo'>Tamanho</label><input id='prodTamanho'></div>
         <div><label class='rotulo'>Cor</label><input id='prodCor'></div>
         <div><label class='rotulo'>Preço de Custo R$</label><input type='number' step='0.01' id='prodCusto' oninput='calcularLucro()'></div>
         <div><label class='rotulo'>Preço de Venda R$</label><input type='number' step='0.01' id='prodVenda' required oninput='calcularLucro()'></div>
-        <div><label class='rotulo'>Lucro R$</label><input type='text' id='prodLucro' readonly></div>
-        <div><label class='rotulo'>Estoque Inicial</label><input type='number' min='0' id='prodEstoque' value='0'></div>
-        <div><label class='rotulo'>Estoque Mínimo</label><input type='number' min='1' id='prodMinimo' value='3'></div>
+        <div><label class='rotulo'>Lucro Líquido</label><input type='text' id='prodLucro' readonly></div>
+        <div><label class='rotulo'>Estoque Atual</label><input type='number' min='0' id='prodEstoque' value='0'></div>
+        <div><label class='rotulo'>Estoque Mínimo (Alerta)</label><input type='number' min='1' id='prodMinimo' value='3'></div>
       </div>
       <div class='grupo-botoes'>
-        <button onclick='salvarProduto()' class='sucesso'>💾 Salvar</button>
+        <button onclick='salvarProduto()' class='sucesso'>💾 Salvar Produto</button>
         <button onclick='limparProduto()' class='secundario'>Limpar</button>
       </div>
       <div id='listaProdutos' style='margin-top:20px'></div>
     </div>
 
     <div id='pag-pdv' class='pagina hidden'>
-      <h1 class='titulo-pagina'>🛒 Ponto de Venda</h1>
-      <div class='destaque-box'><p>💡 Leitor USB: Conecte, posicione o cursor e leia o código — adiciona automaticamente!</p></div>
-      <input id='campoLeitura' placeholder='Leia o código ou digite...' autocomplete='off' autofocus onkeypress='if(event.key==="Enter"){adicionarItemVenda();}'>
+      <h1 class='titulo-pagina'>🛒 Ponto de Venda (PDV)</h1>
+      <div class='destaque-box'><p>💡 Modo Automação: Posicione o cursor no campo abaixo e bipe com o leitor óptico.</p></div>
+      <input id='campoLeitura' placeholder='Bipe o código de barras ou digite...' autocomplete='off' autofocus onkeypress='if(event.key==="Enter"){adicionarItemVenda();}'>
       <div id='itensVenda' style='margin:20px 0;background:#fff;padding:15px;border-radius:8px;border:1px solid var(--borda)'>
-        <h4>Itens da Venda</h4>
+        <h4>Produtos na Venda Corrente</h4>
         <div id='listaItensVenda'><p style='color:var(--cinza)'>Nenhum item adicionado</p></div>
       </div>
       <div class='grid-3'>
@@ -217,64 +215,75 @@ button.small{padding:8px 12px;font-size:14px}
             <option value='debito'>Cartão de Débito</option>
           </select>
         </div>
-        <div><label class='rotulo'>Observação</label><input id='obsVenda' placeholder='Ex: Troca, reserva...'></div>
+        <div><label class='rotulo'>Vincular Cliente (Opcional)</label>
+          <select id='vendaCliente'><option value=''>Consumidor Final</option></select>
+        </div>
+        <div><label class='rotulo'>Observações da Venda</label><input id='obsVenda' placeholder='Ex: Embalagem para presente...'></div>
       </div>
       <div id='totalVenda' style='font-size:22px;font-weight:bold;margin:15px 0'>Total: R$ 0,00</div>
       <div class='grupo-botoes'>
-        <button onclick='finalizarVenda()' class='sucesso'>✅ Finalizar e Imprimir Cupom</button>
-        <button onclick='limparVenda()' class='erro'>Limpar Venda</button>
+        <button onclick='finalizarVenda()' class='sucesso'>✅ Finalizar e Emitir Cupom</button>
+        <button onclick='limparVenda()' class='erro'>Cancelar Venda</button>
       </div>
     </div>
 
     <div id='pag-caixa' class='pagina hidden'>
-      <h1 class='titulo-pagina'>💵 Controle de Caixa</h1>
+      <h1 class='titulo-pagina'>💵 Controle de Caixa e Vendas</h1>
       <div class='caixa-status'>
-        <strong>Status:</strong>
+        <strong>Status Operacional:</strong>
         <span id='statusCaixaSpan' class='caixa-fechado'>Caixa Fechado</span>
       </div>
       <div id='aberturaCaixaArea' class='card' style='margin-bottom:20px'>
-        <h3>Abrir Caixa</h3>
+        <h3>Abertura de Turno</h3>
         <div class='grid-form'>
-          <div><label class='rotulo'>Saldo Inicial R$</label><input type='number' step='0.01' id='saldoInicial' value='0.00'></div>
+          <div><label class='rotulo'>Fundo de Caixa Inicial R$</label><input type='number' step='0.01' id='saldoInicial' value='0.00'></div>
         </div>
         <button onclick='abrirCaixa()' class='sucesso'>🔓 Abrir Caixa</button>
       </div>
       <div id='movimentoCaixa' class='hidden'>
         <div class='grid-2'>
-          <div class='card'><span>Saldo Inicial</span><b id='saldoInicialMostra'>R$ 0,00</b></div>
-          <div class='card'><span>Total de Entradas</span><b class='valor-entrada' id='totalEntradas'>R$ 0,00</b></div>
-          <div class='card'><span>Total de Saídas</span><b class='valor-saida' id='totalSaidas'>R$ 0,00</b></div>
-          <div class='card destaque'><span>Saldo Atual</span><b id='saldoAtual'>R$ 0,00</b></div>
+          <div class='card'><span>Fundo Inicial</span><b id='saldoInicialMostra'>R$ 0,00</b></div>
+          <div class='card'><span>Total Entradas</span><b class='valor-entrada' id='totalEntradas'>R$ 0,00</b></div>
+          <div class='card'><span>Total Saídas (Sangrias)</span><b class='valor-saida' id='totalSaidas'>R$ 0,00</b></div>
+          <div class='card destaque'><span>Saldo Atual em Dinheiro</span><b id='saldoAtual'>R$ 0,00</b></div>
         </div>
         <div class='card' style='margin:20px 0'>
-          <h4>Lançamento Rápido</h4>
+          <h4>Fluxo de Caixa (Ajuste Manual / Sangria)</h4>
           <div class='grid-form'>
-            <div><label class='rotulo'>Tipo</label><select id='tipoLancamento'><option value='entrada'>Entrada</option><option value='saida'>Saída</option></select></div>
+            <div><label class='rotulo'>Operação</label><select id='tipoLancamento'><option value='entrada'>Entrada (Suprimento)</option><option value='saida'>Saída (Sangria)</option></select></div>
             <div><label class='rotulo'>Valor R$</label><input type='number' step='0.01' id='valorLancamento'></div>
-            <div><label class='rotulo'>Descrição</label><input id='descricaoLancamento' placeholder='Ex: Troco, despesa...'></div>
+            <div><label class='rotulo'>Motivo / Descrição</label><input id='descricaoLancamento' placeholder='Ex: Troco em moedas, Pagamento fornecedor...'></div>
           </div>
-          <button onclick='registrarLancamento()' class='small'>➕ Registrar</button>
+          <button onclick='registrarLancamento()' class='small'>➕ Registrar Lançamento</button>
         </div>
-        <h3>Movimento do Dia</h3>
-        <table class='tabela-caixa'>
+        
+        <h3>Movimentações do Turno Atual</h3>
+        <table class='tabela-caixa' style="margin-bottom: 30px;">
           <thead><tr><th>Hora</th><th>Descrição</th><th>Tipo</th><th>Valor</th></tr></thead>
           <tbody id='tabelaMovimento'></tbody>
         </table>
+
+        <h3>Histórico Analítico de Vendas (Hoje)</h3>
+        <table class='tabela-caixa'>
+          <thead><tr><th>Nº Venda</th><th>Hora</th><th>Itens</th><th>Forma Pag.</th><th>Total</th></tr></thead>
+          <tbody id='tabelaHistoricoVendas'></tbody>
+        </table>
+
         <div class='grupo-botoes' style='margin-top:20px'>
-          <button onclick='fecharCaixa()' class='erro'>🔒 Fechar Caixa</button>
-          <button onclick='imprimirRelatorioCaixa()' class='alerta'>🖨️ Imprimir Relatório</button>
+          <button onclick='fecharCaixa()' class='erro'>🔒 Fechar Caixa e Encerrar Turno</button>
+          <button onclick='imprimirRelatorioCaixa()' class='alerta'>🖨️ Imprimir Fechamento</button>
         </div>
       </div>
     </div>
 
     <div id='pag-etiquetas' class='pagina hidden'>
-      <h1 class='titulo-pagina'>🏷️ Gerador de Etiquetas</h1>
+      <h1 class='titulo-pagina'>🏷️ Emissor de Etiquetas com Código de Barras</h1>
       <div class='etiqueta-config'>
-        <div><label class='rotulo'>Código do Produto</label><input id='etqCodigo' placeholder='Leia ou digite' autocomplete='off'></div>
-        <div><label class='rotulo'>Quantidade</label><input type='number' min='1' value='1' id='etqQtd'></div>
-        <div><label class='rotulo'>Tamanho</label>
+        <div><label class='rotulo'>Código do Produto</label><input id='etqCodigo' placeholder='Bipe ou digite o código' autocomplete='off'></div>
+        <div><label class='rotulo'>Quantidade de Cópias</label><input type='number' min='1' value='1' id='etqQtd'></div>
+        <div><label class='rotulo'>Gabarito / Tamanho</label>
           <select id='etqTamanho' onchange='mudarTamanho()'>
-            <option value='38x25'>38 x 25 mm (Padrão)</option>
+            <option value='38x25'>38 x 25 mm (Padrão Pimaco)</option>
             <option value='40x30'>40 x 30 mm</option>
             <option value='50x30'>50 x 30 mm</option>
             <option value='personalizado'>Personalizado</option>
@@ -288,39 +297,36 @@ button.small{padding:8px 12px;font-size:14px}
             <input type='number' min='15' max='80' value='25' id='etqAltura' style='flex:1'>
           </div>
         </div>
-        <div><label class='rotulo'>Mostrar Marca?</label>
-          <select id='etqMarca'>
-            <option value='sim'>Sim</option>
-            <option value='nao'>Não</option>
-          </select>
+        <div><label class='rotulo'>Exibir Marca?</label>
+          <select id='etqMarca'><option value='sim'>Sim</option><option value='nao'>Não</option></select>
         </div>
       </div>
       <div class='grupo-botoes'>
-        <button onclick='gerarPreview()' class='sucesso'>👁️ Gerar Etiquetas</button>
-        <button onclick='imprimirEtiquetas()' class='alerta'>🖨️ Imprimir</button>
+        <button onclick='gerarPreview()' class='sucesso'>👁️ Gerar Lote de Etiquetas</button>
+        <button onclick='imprimirEtiquetas()' class='alerta'>🖨️ Imprimir Etiquetas</button>
       </div>
       <div id='previewEtiquetas' class='hidden' style='margin-top:20px'></div>
     </div>
 
     <div id='pag-config' class='pagina hidden'>
-      <h1 class='titulo-pagina'>⚙️ Dados da Loja e Segurança</h1>
+      <h1 class='titulo-pagina'>⚙️ Configurações e Segurança</h1>
       <div class='grid-form'>
-        <div><label class='rotulo'>Nome da Loja</label><input id='configNome' value='ANAKIDS MODA INFANTIL'></div>
+        <div><label class='rotulo'>Razão Social / Nome da Loja</label><input id='configNome' value='ANAKIDS MODA INFANTIL'></div>
         <div><label class='rotulo'>CNPJ</label><input id='configCnpj' value='00.000.000/0000-00'></div>
-        <div><label class='rotulo'>Endereço</label><input id='configEndereco' value='Fortaleza, Ceará'></div>
-        <div><label class='rotulo'>Telefone/WhatsApp</label><input id='configTelefone' value='(85) 99999-9999'></div>
-        <div><label class='rotulo'>Mensagem de Rodapé</label><input id='configRodape' value='Obrigado pela preferência! Volte sempre!'></div>
+        <div><label class='rotulo'>Endereço Comercial</label><input id='configEndereco' value='Fortaleza, Ceará'></div>
+        <div><label class='rotulo'>Telefone de Contato</label><input id='configTelefone' value='(85) 99999-9999'></div>
+        <div><label class='rotulo'>Mensagem do Rodapé do Cupom</label><input id='configRodape' value='Obrigado pela preferência! Volte sempre!'></div>
       </div>
       <button onclick='salvarConfig()' class='sucesso' style='margin-bottom: 25px;'>💾 Salvar Configurações</button>
       
       <hr style='border:0; border-top: 1px solid var(--borda); margin: 20px 0;'>
       
       <div class='card' style='background: #fff5f5; border-color: #feb2b2;'>
-        <h3 style='color: var(--erro); margin-bottom: 5px;'>🛡️ Cópia de Segurança e Backup</h3>
-        <p style='color: var(--texto); font-size: 13px; margin-bottom: 12px;'>Como este sistema armazena os dados localmente no navegador, recomendamos baixar uma cópia de segurança periodicamente para evitar perdas.</p>
+        <h3 style='color: var(--erro); margin-bottom: 5px;'>🛡️ Gestão de Backups do Sistema</h3>
+        <p style='color: var(--texto); font-size: 13px; margin-bottom: 12px;'>Os dados deste ERP ficam salvos de forma segura no seu navegador. Para evitar acidentes ou formatações, exporte o backup regularmente.</p>
         <div style='display: flex; gap: 10px; flex-wrap: wrap;'>
-          <button onclick='exportarDados()' class='alerta'>📥 Exportar Backup (.json)</button>
-          <button onclick='document.getElementById("inputImportar").click()' class='secundario'>📤 Importar Backup</button>
+          <button onclick='exportarDados()' class='alerta'>📥 Baixar Arquivo de Backup (.json)</button>
+          <button onclick='document.getElementById("inputImportar").click()' class='secundario'>📤 Restaurar Arquivo de Backup</button>
           <input type='file' id='inputImportar' class='hidden' accept='.json' onchange='importarDados(event)'>
         </div>
       </div>
@@ -345,6 +351,11 @@ let db = JSON.parse(localStorage.getItem('dbAnakids') || `{
     "rodape": "Obrigado pela preferência! Volte sempre!"
   }
 }`);
+
+// Migração automática de dados legados do padrão anterior se houver
+if(!db.clientes && db.criancas) { db.clientes = db.criancas; }
+if(!db.clientes) { db.clientes = []; }
+
 let carrinho = [];
 let numeroCupom = db.vendas.length + 1;
 
@@ -367,8 +378,9 @@ function entrarSistema(){
     carregarConfig();
     atualizarPainel();
     verificarStatusCaixa();
-    listarCriancas();
+    listarClientes();
     listarProdutos();
+    atualizarSelectClientesVenda();
   }else mostrarMensagem('Erro','Usuário ou senha incorretos!','erro');
 }
 
@@ -382,8 +394,9 @@ function abrirPagina(nome){
   document.querySelectorAll('.pagina').forEach(p=>p.classList.add('hidden'));
   document.querySelectorAll('.sidebar button').forEach(b=>b.classList.remove('ativo'));
   document.getElementById(`pag-${nome}`).classList.remove('hidden');
-  if(event && event.target) event.target.classList.add('ativo');
+  if(event && event.target && event.target.tagName === 'BUTTON') event.target.classList.add('ativo');
   if(nome === 'pdv') {
+    atualizarSelectClientesVenda();
     setTimeout(() => {
       let input = document.getElementById('campoLeitura');
       if(input) { input.value = ''; input.focus(); }
@@ -393,9 +406,13 @@ function abrirPagina(nome){
 
 function atualizarPainel(){
   document.getElementById('qtdProdutos').textContent = db.produtos.length;
-  document.getElementById('qtdCriancas').textContent = db.criancas.length;
+  document.getElementById('qtdClientes').textContent = db.clientes.length;
+  
+  let estoqueBaixo = db.produtos.filter(p => p.estoque <= (p.estoqueMinimo || 3)).length;
+  document.getElementById('qtdEstoqueBaixo').textContent = estoqueBaixo;
+  
   let hoje = new Date();
-  let proximos = db.criancas.filter(c=>{
+  let proximos = db.clientes.filter(c=>{
     let aniv = new Date(hoje.getFullYear(), c.aniversarioMes-1, c.aniversarioDia);
     if(aniv < hoje) aniv.setFullYear(hoje.getFullYear()+1);
     let diff = Math.ceil((aniv - hoje)/(1000*60*60*24));
@@ -424,43 +441,43 @@ function salvarConfig(){
   db.configLoja.telefone = document.getElementById('configTelefone').value.trim();
   db.configLoja.rodape = document.getElementById('configRodape').value.trim();
   salvarDB();
-  mostrarMensagem('Sucesso','Configurações salvas!');
+  mostrarMensagem('Sucesso','Configurações da empresa atualizadas!');
 }
 
-function salvarCrianca(){
-  let nova = {
+function salvarCliente(){
+  let novo = {
     id: Date.now(),
-    nome: document.getElementById('criancaNome').value.trim(),
-    aniversarioDia: parseInt(document.getElementById('aniversarioDia').value),
-    aniversarioMes: parseInt(document.getElementById('aniversarioMes').value),
-    responsavel: document.getElementById('responsavel').value.trim(),
-    contato: document.getElementById('contato').value.trim()
+    nome: document.getElementById('clienteNome').value.trim(),
+    clienteCpf: document.getElementById('clienteCpf').value.trim(),
+    contato: document.getElementById('clienteContato').value.trim(),
+    aniversarioDia: parseInt(document.getElementById('aniversarioDia').value) || 0,
+    aniversarioMes: parseInt(document.getElementById('aniversarioMes').value) || 0
   };
-  if(!nova.nome || !nova.aniversarioDia || !nova.aniversarioMes){
-    mostrarMensagem('Erro','Preencha nome, dia e mês!','erro');return;
+  if(!novo.nome){
+    mostrarMensagem('Erro','O nome do cliente é obrigatório!','erro');return;
   }
-  db.criancas.push(nova);
+  db.clientes.push(novo);
   salvarDB();
-  limparCrianca();
-  listarCriancas();
-  mostrarMensagem('Sucesso','Criança cadastrada!');
+  limparCliente();
+  listarClientes();
+  mostrarMensagem('Sucesso','Cliente cadastrado com sucesso!');
 }
-function limparCrianca(){document.querySelectorAll('#pag-criancas input, #pag-criancas select').forEach(i=>i.value='')}
-function listarCriancas(){
-  let busca = document.getElementById('buscaCrianca').value.trim().toLowerCase();
-  let filtradas = db.criancas.filter(c=>c.nome.toLowerCase().includes(busca));
+function limparCliente(){document.querySelectorAll('#pag-clientes input, #pag-clientes select').forEach(i=>i.value='')}
+function listarClientes(){
+  let busca = document.getElementById('buscaCliente').value.trim().toLowerCase();
+  let filtradas = db.clientes.filter(c=>c.nome.toLowerCase().includes(busca) || (c.clienteCpf && c.clienteCpf.includes(busca)));
   let html = filtradas.map(c=>`
     <div class='lista-item'>
       <div class='lista-dados'>
         <strong>${c.nome}</strong>
-        <br><small>Aniversário: ${String(c.aniversarioDia).padStart(2,'0')}/${String(c.aniversarioMes).padStart(2,'0')} • Resp: ${c.responsavel || 'Não informado'}</small>
+        <br><small>CPF: ${c.clienteCpf || 'Não Informado'} • Tel: ${c.contato || 'Sem telefone'} ${c.aniversarioDia ? `• Aniv: ${String(c.aniversarioDia).padStart(2,'0')}/${String(c.aniversarioMes).padStart(2,'0')}` : ''}</small>
       </div>
-      <button class='pequeno erro' onclick='excluirCrianca(${c.id})'>Excluir</button>
+      <button class='pequeno erro' onclick='excluirCliente(${c.id})'>Excluir</button>
     </div>
   `).join('');
-  document.getElementById('listaCriancas').innerHTML = html || '<p style="color:var(--cinza)">Nenhuma criança encontrada</p>';
+  document.getElementById('listaClientes').innerHTML = html || '<p style="color:var(--cinza)">Nenhum cliente localizado</p>';
 }
-function excluirCrianca(id){db.criancas = db.criancas.filter(c=>c.id!==id);salvarDB();listarCriancas()}
+function excluirCliente(id){db.clientes = db.clientes.filter(c=>c.id!==id);salvarDB();listarClientes()}
 
 function calcularLucro(){
   let custo = parseFloat(document.getElementById('prodCusto').value || 0);
@@ -469,7 +486,7 @@ function calcularLucro(){
 }
 function salvarProduto(){
   let cod = document.getElementById('prodCodigo').value.trim();
-  if(db.produtos.some(p=>p.codigo === cod)){mostrarMensagem('Erro','Código já cadastrado!','erro');return}
+  if(db.produtos.some(p=>p.codigo === cod)){mostrarMensagem('Erro','Esse código de barras já existe!','erro');return}
   let novo = {
     codigo: cod,
     nome: document.getElementById('prodNome').value.trim(),
@@ -489,28 +506,31 @@ function salvarProduto(){
   salvarDB();
   limparProduto();
   listarProdutos();
-  mostrarMensagem('Sucesso','Produto cadastrado!');
+  mostrarMensagem('Sucesso','Produto catalogado!');
 }
 function limparProduto(){document.querySelectorAll('#pag-produtos input').forEach(i=>i.value='')}
 function listarProdutos(){
   let busca = document.getElementById('buscaProd').value.trim().toLowerCase();
   let filtrados = db.produtos.filter(p=>p.nome.toLowerCase().includes(busca) || p.codigo.includes(busca));
-  let html = filtrados.map(p=>`
-    <div class='lista-item'>
-      <div class='lista-dados'>
-        <strong>${p.nome}</strong>
-        <br><small>Cód: ${p.codigo} • R$ ${p.precoVenda.toFixed(2)} • Est: ${p.estoque}</small>
+  let html = filtrados.map(p=>{
+    let critico = p.estoque <= p.estoqueMinimo;
+    return `
+      <div class='lista-item' style='${critico ? "border-left: 4px solid var(--alerta);" : ""}'>
+        <div class='lista-dados'>
+          <strong>${p.nome} ${p.tamanho ? `(${p.tamanho})` : ''}</strong>
+          <br><small>Cód: ${p.codigo} • Preço: R$ ${p.precoVenda.toFixed(2)} • <span style="${critico ? "color:var(--erro);font-weight:bold;" : ""}">Est: ${p.estoque} un (Mín: ${p.estoqueMinimo})</span></small>
+        </div>
+        <button class='pequeno erro' onclick='excluirProduto("${p.codigo}")'>Excluir</button>
       </div>
-      <button class='pequeno erro' onclick='excluirProduto("${p.codigo}")'>Excluir</button>
-    </div>
-  `).join('');
-  document.getElementById('listaProdutos').innerHTML = html || '<p style="color:var(--cinza)">Nenhum produto encontrado</p>';
+    `;
+  }).join('');
+  document.getElementById('listaProdutos').innerHTML = html || '<p style="color:var(--cinza)">Nenhum produto cadastrado</p>';
 }
 function excluirProduto(cod){db.produtos = db.produtos.filter(p=>p.codigo!==cod);salvarDB();listarProdutos()}
 
 function verificarStatusCaixa(){
   if(db.caixaAberto){
-    document.getElementById('statusCaixaSpan').textContent = 'Caixa Aberto';
+    document.getElementById('statusCaixaSpan').textContent = 'Caixa Operacional Aberto';
     document.getElementById('statusCaixaSpan').className = 'caixa-abertos';
     document.getElementById('aberturaCaixaArea').classList.add('hidden');
     document.getElementById('movimentoCaixa').classList.remove('hidden');
@@ -534,7 +554,7 @@ function abrirCaixa(){
   };
   salvarDB();
   verificarStatusCaixa();
-  mostrarMensagem('Sucesso','Caixa aberto!');
+  mostrarMensagem('Sucesso','Turno de caixa iniciado!');
 }
 function atualizarDadosCaixa(){
   let cx = db.caixaAberto;
@@ -543,7 +563,8 @@ function atualizarDadosCaixa(){
   document.getElementById('totalEntradas').textContent = cx.entradas.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
   document.getElementById('totalSaidas').textContent = cx.saidas.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
   document.getElementById('saldoAtual').textContent = cx.saldoAtual.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  let html = cx.movimentos.map(m=>`
+  
+  let htmlMovs = cx.movimentos.map(m=>`
     <tr>
       <td>${new Date(m.hora).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</td>
       <td>${m.descricao}</td>
@@ -551,13 +572,27 @@ function atualizarDadosCaixa(){
       <td class="${m.tipo==='entrada'?'valor-entrada':'valor-saida'}">${m.valor.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</td>
     </tr>
   `).join('');
-  document.getElementById('tabelaMovimento').innerHTML = html;
+  document.getElementById('tabelaMovimento').innerHTML = htmlMovs;
+
+  let hojeStr = new Date().toISOString().slice(0, 10);
+  let vendasHoje = db.vendas.filter(v => v.data.slice(0,10) === hojeStr);
+  let htmlVendas = vendasHoje.map(v => `
+    <tr>
+      <td>#${String(v.numero).padStart(4,'0')}</td>
+      <td>${new Date(v.data).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</td>
+      <td><small>${v.itens.map(i => i.nome).join(', ')}</small></td>
+      <td><span class="badge amarelo">${v.formaPagamento.toUpperCase()}</span></td>
+      <td><strong>${v.total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</strong></td>
+    </tr>
+  `).join('');
+  document.getElementById('tabelaHistoricoVendas').innerHTML = htmlVendas || '<tr><td colspan="5" style="color:var(--cinza); text-align:center;">Nenhuma venda realizada hoje.</td></tr>';
 }
+
 function registrarLancamento(){
   if(!db.caixaAberto){mostrarMensagem('Erro','Abra o caixa primeiro!','erro');return}
   let tipo = document.getElementById('tipoLancamento').value;
   let valor = parseFloat(document.getElementById('valorLancamento').value || 0);
-  let desc = document.getElementById('descricaoLancamento').value.trim() || 'Lançamento manual';
+  let desc = document.getElementById('descricaoLancamento').value.trim() || 'Ajuste manual';
   if(valor<=0){mostrarMensagem('Erro','Valor inválido!','erro');return}
   db.caixaAberto.movimentos.push({hora:new Date().toISOString(), tipo:tipo, valor:valor, descricao:desc});
   if(tipo==='entrada'){db.caixaAberto.entradas += valor;db.caixaAberto.saldoAtual += valor}
@@ -565,24 +600,32 @@ function registrarLancamento(){
   salvarDB();
   atualizarDadosCaixa();
   document.getElementById('valorLancamento').value='';document.getElementById('descricaoLancamento').value='';
-  mostrarMensagem('Sucesso','Lançamento registrado!');
+  mostrarMensagem('Sucesso','Movimento lançado financeiramente!');
 }
 function fecharCaixa(){
   if(!db.caixaAberto) return;
-  if(confirm(`Fechar caixa? Saldo final: ${db.caixaAberto.saldoAtual.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`)){
+  if(confirm(`Encerrar turno e fechar caixa? Saldo em Dinheiro: ${db.caixaAberto.saldoAtual.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`)){
     db.caixaAberto.dataFechamento = new Date().toISOString();
     db.historicoCaixa.push(JSON.parse(JSON.stringify(db.caixaAberto)));
     db.caixaAberto = null;
     salvarDB();
     verificarStatusCaixa();
-    mostrarMensagem('Sucesso','Caixa fechado!');
+    mostrarMensagem('Sucesso','Caixa fechado com sucesso!');
   }
 }
 function imprimirRelatorioCaixa(){if(db.caixaAberto) window.print()}
 
-function gerarCupom(total, formaPag, obs){
+function atualizarSelectClientesVenda(){
+  let select = document.getElementById('vendaCliente');
+  select.innerHTML = "<option value=''>Consumidor Final</option>";
+  db.clientes.forEach(c => {
+    select.innerHTML += `<option value="${c.nome}">${c.nome} ${c.clienteCpf ? `(${c.clienteCpf})` : ''}</option>`;
+  });
+}
+
+function gerarCupom(total, formaPag, obs, clienteSelect){
   const loja = db.configLoja;
-  const data = new Date().toLocaleString('pt-BR',{dateStyle:'full',timeStyle:'short'});
+  const data = new Date().toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
   const itensHtml = carrinho.map(item=>`
     <tr>
       <td>${item.nome.substring(0,22)}${item.nome.length>22?'...':''}</td>
@@ -602,12 +645,13 @@ function gerarCupom(total, formaPag, obs){
     </div>
     <div class="cupom-linha"></div>
     <div class="cupom-identificacao">
-      <div>CUPOM Nº ${numeroCupom.toString().padStart(6,'0')}</div>
-      <div>Data/Hora: ${data}</div>
+      <div>CUPOM DE VENDA Nº ${numeroCupom.toString().padStart(6,'0')}</div>
+      <div>Data: ${data}</div>
+      <div>Cliente: ${clienteSelect || 'Consumidor Final'}</div>
     </div>
     <div class="cupom-linha"></div>
     <table class="cupom-tabela">
-      <thead><tr><th>ITEM</th><th style="text-align:right">QTD</th><th style="text-align:right">UN</th><th style="text-align:right">TOTAL</th></tr></thead>
+      <thead><tr><th>ITEM</th><th style="text-align:right">QTD</th><th style="text-align:right">V.UN</th><th style="text-align:right">TOTAL</th></tr></thead>
       <tbody>${itensHtml}</tbody>
     </table>
     <div class="cupom-linha"></div>
@@ -616,7 +660,7 @@ function gerarCupom(total, formaPag, obs){
       <div class="cupom-total-linha" style="color:var(--sucesso)"><span>TOTAL</span><span>R$ ${total.toFixed(2)}</span></div>
     </div>
     <div class="cupom-pagamento">
-      <div class="cupom-pagamento-titulo">FORMA DE PAGAMENTO</div>
+      <div class="cupom-pagamento-titulo">MODALIDADE DE PAGAMENTO</div>
       <div class="cupom-pagamento-linha"><span>${formaTexto}</span><span>R$ ${total.toFixed(2)}</span></div>
     </div>
     ${obs?`<div style="font-size:10px;margin:8px 0">Obs: ${obs}</div>`:''}
@@ -634,14 +678,14 @@ function adicionarItemVenda(){
   
   let prod = db.produtos.find(p=>p.codigo === cod);
   if(!prod){
-    mostrarMensagem('Erro','Produto não cadastrado!','erro');
+    mostrarMensagem('Erro','Produto não catalogado no sistema!','erro');
     field.value = '';
     return;
   }
   
   let qtdNoCarrinho = carrinho.filter(item => item.codigo === cod).length;
   if(prod.estoque <= qtdNoCarrinho){
-    mostrarMensagem('Erro',`Estoque insuficiente! O limite é de ${prod.estoque} un.`,'erro');
+    mostrarMensagem('Erro',`Estoque indisponível! Bloqueado no limite de ${prod.estoque} un.`,'erro');
     field.value = '';
     return;
   }
@@ -656,13 +700,13 @@ function atualizarCarrinho(){
   let total = carrinho.reduce((s,i)=>s + i.precoVenda,0);
   document.getElementById('listaItensVenda').innerHTML = carrinho.map((i,idx)=>`
     <div style='display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #eee'>
-      <span>${i.nome.substring(0,25)} - ${i.tamanho||'Padrão'}</span>
+      <span>${i.nome.substring(0,25)} ${i.tamanho ? `[${i.tamanho}]` : ''}</span>
       <div>
         <span style="font-weight:bold; margin-right:10px;">R$ ${i.precoVenda.toFixed(2)}</span>
         <button class='pequeno erro' onclick='removerItemCarrinho(${idx})'>❌</button>
       </div>
     </div>
-  `).join('') || '<p style="color:var(--cinza)">Nenhum item adicionado</p>';
+  `).join('') || '<p style="color:var(--cinza)">Caixa livre para leitura de mercadorias...</p>';
   document.getElementById('totalVenda').textContent = `Total: ${total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`;
 }
 
@@ -675,23 +719,24 @@ function removerItemCarrinho(index){
 function limparVenda(){carrinho=[];atualizarCarrinho();document.getElementById('campoLeitura').value='';document.getElementById('campoLeitura').focus()}
 
 function finalizarVenda(){
-  if(carrinho.length===0){mostrarMensagem('Erro','Adicione itens primeiro!','erro');return}
-  if(!db.caixaAberto){mostrarMensagem('Erro','Abra o caixa antes de vender!','erro');return}
+  if(carrinho.length===0){mostrarMensagem('Erro','O carrinho de compras está vazio!','erro');return}
+  if(!db.caixaAberto){mostrarMensagem('Erro','Abra o caixa antes de operar vendas!','erro');return}
   let totalVenda = carrinho.reduce((s,i)=>s+i.precoVenda,0);
   let formaPag = document.getElementById('formaPagamento').value;
+  let clie = document.getElementById('vendaCliente').value;
   let obs = document.getElementById('obsVenda').value.trim();
   
   carrinho.forEach(i=>{let p=db.produtos.find(x=>x.codigo===i.codigo);if(p)p.estoque--});
   db.caixaAberto.movimentos.push({hora:new Date().toISOString(), tipo:'entrada', valor:totalVenda, descricao:`Venda Nº ${numeroCupom} - ${formaPag.toUpperCase()}`});
   db.caixaAberto.entradas += totalVenda;
   db.caixaAberto.saldoAtual += totalVenda;
-  db.vendas.push({numero:numeroCupom,data:new Date().toISOString(),itens:carrinho,total:totalVenda,formaPagamento:formaPag});
+  db.vendas.push({numero:numeroCupom,data:new Date().toISOString(),itens:carrinho,total:totalVenda,formaPagamento:formaPag,cliente:clie});
   salvarDB();
   atualizarDadosCaixa();
   listarProdutos();
-  gerarCupom(totalVenda, formaPag, obs);
+  gerarCupom(totalVenda, formaPag, obs, clie);
   setTimeout(()=>window.print(), 300);
-  mostrarMensagem('Sucesso','Venda finalizada!');
+  mostrarMensagem('Sucesso','Operação finalizada!');
   limparVenda();
 }
 
@@ -701,7 +746,7 @@ function gerarPreview(){
   let cod = document.getElementById('etqCodigo').value.trim();
   let qtd = parseInt(document.getElementById('etqQtd').value || 1);
   let prod = db.produtos.find(p=>p.codigo === cod);
-  if(!prod){mostrarMensagem('Erro','Produto não encontrado!','erro');return}
+  if(!prod){mostrarMensagem('Erro','Código de produto inválido!','erro');return}
   let mostrarMarca = document.getElementById('etqMarca').value === 'sim';
   let htmlEtiquetas = '';
   for(let i=0;i<qtd;i++){
@@ -709,7 +754,7 @@ function gerarPreview(){
       <div class='etiqueta'>
         <div class='et-nome'>${prod.nome}</div>
         ${mostrarMarca && prod.marca?`<div class='et-marca'>${prod.marca}</div>`:''}
-        ${prod.tamanho?`<div class='et-dados'>${prod.tamanho} • ${prod.cor||''}</div>`:''}
+        ${prod.tamanho?`<div class='et-dados'>Tam: ${prod.tamanho} • ${prod.cor||''}</div>`:''}
         <div class='et-preco'>R$ ${prod.precoVenda.toFixed(2)}</div>
         <svg class='et-codigo' jsbarcode-format="CODE128" jsbarcode-value="${prod.codigo}" jsbarcode-textmargin="0" jsbarcode-fontsize="8"></svg>
       </div>
@@ -724,7 +769,7 @@ function imprimirEtiquetas(){
   if(document.getElementById('previewEtiquetas').innerHTML.trim() !== ''){
     window.print();
   }else{
-    mostrarMensagem('Erro','Gere as etiquetas primeiro!','erro');
+    mostrarMensagem('Erro','Gere a visualização das etiquetas primeiro!','erro');
   }
 }
 
@@ -732,11 +777,11 @@ function exportarDados() {
   const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
   const downloadAnchor = document.createElement('a');
   downloadAnchor.setAttribute("href", dataStr);
-  downloadAnchor.setAttribute("download", `backup_anakids_${new Date().toISOString().slice(0,10)}.json`);
+  downloadAnchor.setAttribute("download", `backup_sistema_${new Date().toISOString().slice(0,10)}.json`);
   document.body.appendChild(downloadAnchor);
   downloadAnchor.click();
   downloadAnchor.remove();
-  mostrarMensagem('Sucesso', 'Arquivo de backup baixado!');
+  mostrarMensagem('Sucesso', 'Arquivo gerado e baixado!');
 }
 
 function importarDados(event) {
@@ -746,19 +791,20 @@ function importarDados(event) {
   leitor.onload = function(e) {
     try {
       const dadosImportados = JSON.parse(e.target.result);
-      if (dadosImportados.produtos && dadosImportados.criancas) {
+      if (dadosImportados.produtos && (dadosImportados.clientes || dadosImportados.criancas)) {
         db = dadosImportados;
+        if(!db.clientes && db.criancas) db.clientes = db.criancas;
         salvarDB();
         carregarConfig();
         verificarStatusCaixa();
         listarProdutos();
-        listarCriancas();
-        mostrarMensagem('Sucesso', 'Backup restaurado com sucesso!');
+        listarClientes();
+        mostrarMensagem('Sucesso', 'Base de dados restaurada!');
       } else {
-        mostrarMensagem('Erro', 'Arquivo inválido ou corrompido!', 'erro');
+        mostrarMensagem('Erro', 'Formato JSON incompatível.', 'erro');
       }
     } catch (err) {
-      mostrarMensagem('Erro', 'Erro ao ler o arquivo JSON.', 'erro');
+      mostrarMensagem('Erro', 'Falha estrutural ao decodificar o arquivo.', 'erro');
     }
   };
   leitor.readAsText(arquivo);
