@@ -97,6 +97,10 @@ button.small{padding:8px 12px;font-size:14px}
 
 .historico-compras{margin-top:10px;padding:10px;background:#f8fafc;border-radius:6px;border:1px solid var(--borda);font-size:13px}
 
+.container-busca-pdv {display:flex;gap:10px;align-items:center;margin-bottom:15px}
+.container-busca-pdv input {margin:0;flex:1}
+.container-busca-pdv button {margin:0;height:45px;white-space:nowrap}
+
 @media print{
   @page{size:auto;margin:0;padding:0}
   body *{visibility:hidden !important}
@@ -133,7 +137,8 @@ button.small{padding:8px 12px;font-size:14px}
     <button id='btn-nav-clientes' onclick='abrirPagina("clientes")'>👥 Clientes</button>
     <button id='btn-nav-produtos' onclick='abrirPagina("produtos")'>📦 Produtos</button>
     <button id='btn-nav-pdv' onclick='abrirPagina("pdv")'>🛒 PDV / Vendas</button>
-    <button id='btn-nav-caixa' onclick='abrirPagina("caixa")'>💵 Caixa e Vendas</button>
+    <button id='btn-nav-caixa' onclick='abrirPagina("caixa")'>💵 Caixa Diário</button>
+    <button id='btn-nav-relatorios' onclick='abrirPagina("relatorios")'>📊 Relatórios e Lucros</button>
     <button id='btn-nav-etiquetas' onclick='abrirPagina("etiquetas")'>🏷️ Etiquetas</button>
     <button id='btn-nav-config' onclick='abrirPagina("config")'>⚙️ Configurações</button>
   </div>
@@ -203,7 +208,12 @@ button.small{padding:8px 12px;font-size:14px}
 
     <div id='pag-pdv' class='pagina hidden'>
       <h1 class='titulo-pagina'>🛒 Ponto de Venda (PDV)</h1>
-      <input id='campoLeitura' placeholder='Bipe o código de barras ou digite...' autocomplete='off' onkeypress='if(event.key==="Enter"){adicionarItemVenda();}'>
+      
+      <div class="container-busca-pdv">
+        <input id='campoLeitura' placeholder='Digite o número do código ou bipe...' autocomplete='off' onkeypress='if(event.key==="Enter"){adicionarItemVenda();}'>
+        <button onclick="adicionarItemVenda()" class="sucesso">➕ Adicionar</button>
+      </div>
+
       <div id='itensVenda' style='margin:20px 0;background:#fff;padding:15px;border-radius:8px;border:1px solid var(--borda)'>
         <h4>Produtos na Venda Corrente</h4>
         <div id='listaItensVenda'><p style='color:var(--cinza)'>Nenhum item adicionado</p></div>
@@ -231,7 +241,7 @@ button.small{padding:8px 12px;font-size:14px}
     </div>
 
     <div id='pag-caixa' class='pagina hidden'>
-      <h1 class='titulo-pagina'>💵 Controle de Caixa Profissional</h1>
+      <h1 class='titulo-pagina'>💵 Controle de Caixa Diário</h1>
       <div class='caixa-status'>
         <strong>Status Operacional:</strong>
         <span id='statusCaixaSpan' class='caixa-fechado'>Caixa Fechado</span>
@@ -246,11 +256,6 @@ button.small{padding:8px 12px;font-size:14px}
       </div>
 
       <div id='movimentoCaixa' class='hidden'>
-        <div class='grid-2'>
-          <div class='card' style='background: #f0fdf4;'><span>Faturamento Total Bruto</span><b id='cxFaturamento' style='color: var(--sucesso);'>R$ 0,00</b></div>
-          <div class='card' style='background: #fffaf0;'><span>Lucro Líquido Estimado</span><b id='cxLucroReal' style='color: var(--alerta);'>R$ 0,00</b></div>
-        </div>
-
         <div class='card' style='margin:20px 0;'>
           <h4>Fluxo Atual do Caixa Físico (Dinheiro em Mãos)</h4>
           <div class='grid-3' style='margin-top:10px;'>
@@ -285,13 +290,21 @@ button.small{padding:8px 12px;font-size:14px}
           <thead><tr><th>Hora</th><th>Descrição</th><th>Tipo</th><th>Valor</th></tr></thead>
           <tbody id='tabelaMovimento'></tbody>
         </table>
-
-        <h3>Histórico Analítico de Vendas (Hoje)</h3>
-        <table class='tabela-caixa'>
-          <thead><tr><th>Nº Venda</th><th>Hora</th><th>Cliente</th><th>Pagamento</th><th>Total</th></tr></thead>
-          <tbody id='tabelaHistoricoVendas'></tbody>
-        </table>
       </div>
+    </div>
+
+    <div id='pag-relatorios' class='pagina hidden'>
+      <h1 class='titulo-pagina'>📊 Gestão Estratégica e Relatórios</h1>
+      <div class='grid-2'>
+        <div class='card' style='background: #f0fdf4;'><span>Faturamento Bruto (Hoje)</span><b id='cxFaturamento'>R$ 0,00</b></div>
+        <div class='card' style='background: #fffaf0;'><span>Lucro Líquido Real (Hoje)</span><b id='cxLucroReal'>R$ 0,00</b></div>
+      </div>
+      <br>
+      <h3>Histórico Analítico de Vendas (Hoje)</h3>
+      <table class='tabela-caixa'>
+        <thead><tr><th>Nº Venda</th><th>Hora</th><th>Cliente</th><th>Pagamento</th><th>Total</th></tr></thead>
+        <tbody id='tabelaHistoricoVendas'></tbody>
+      </table>
     </div>
 
     <div id='pag-etiquetas' class='pagina hidden'>
@@ -400,6 +413,10 @@ function abrirPagina(nome, filtro=''){
     atualizarSelectClientesVenda();
     setTimeout(() => { document.getElementById('campoLeitura').focus(); }, 50);
   }
+  
+  if(nome === 'relatorios' || nome === 'caixa'){
+    atualizarDadosCaixa();
+  }
 }
 
 function atualizarPainel(){
@@ -427,7 +444,7 @@ function salvarConfig(){
   db.configLoja.telefone = document.getElementById('configTelefone').value.trim();
   db.configLoja.rodape = document.getElementById('configRodape').value.trim();
   salvarDB();
-  mostrarMensagem('Sucesso','Configurações atualizadas!');
+  mostrarMensagem('Sucesso','Configurações updated!');
 }
 
 function salvarCliente(){
@@ -457,7 +474,7 @@ function listarClientes(){
     let totalGasto = compras.reduce((sum, v) => sum + v.total, 0);
     
     let histHtml = compras.length > 0 
-      ? `<div class="historico-compras">🛍️ <b>Histórico de Compras:</b> ${compras.length} compras realizada(s) | Total Consumido: <b>${totalGasto.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</b></div>`
+      ? `<div class="historico-compras">🛍️ <b>Histórico de Compras:</b> ${compras.length} compra(s) realizada(s) | Total Consumido: <b>${totalGasto.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</b></div>`
       : `<div class="historico-compras" style="color:var(--cinza);">Nenhuma compra registrada neste CPF ainda.</div>`;
 
     return `
@@ -562,9 +579,6 @@ function abrirCaixa(){
 }
 
 function atualizarDadosCaixa(){
-  let cx = db.caixaAberto;
-  if(!cx) return;
-
   let hojeStr = new Date().toISOString().slice(0, 10);
   let vendasHoje = db.vendas.filter(v => v.data.slice(0,10) === hojeStr);
 
@@ -578,20 +592,23 @@ function atualizarDadosCaixa(){
   document.getElementById('cxFaturamento').textContent = faturamentoTotal.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
   document.getElementById('cxLucroReal').textContent = lucroReal.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 
-  document.getElementById('lblFundoFisico').textContent = cx.saldoInicial.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  document.getElementById('lblEntradasFisico').textContent = cx.entradasFisicas.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  document.getElementById('lblSaidasFisico').textContent = cx.saidasFisicas.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  document.getElementById('lblTotalFisico').textContent = cx.saldoAtual.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  
-  let htmlMovs = cx.movimentos.map(m=>`
-    <tr>
-      <td>${new Date(m.hora).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</td>
-      <td>${m.descricao}</td>
-      <td><span class="badge ${m.tipo==='entrada'?'verde':'vermelho'}">${m.tipo==='entrada'?'Entrada':'Saída'}</span></td>
-      <td class="${m.tipo==='entrada'?'valor-entrada':'valor-saida'}">${m.valor.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</td>
-    </tr>
-  `).join('');
-  document.getElementById('tabelaMovimento').innerHTML = htmlMovs;
+  let cx = db.caixaAberto;
+  if(cx) {
+    document.getElementById('lblFundoFisico').textContent = cx.saldoInicial.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+    document.getElementById('lblEntradasFisico').textContent = cx.entradasFisicas.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+    document.getElementById('lblSaidasFisico').textContent = cx.saidasFisicas.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+    document.getElementById('lblTotalFisico').textContent = cx.saldoAtual.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+    
+    let htmlMovs = cx.movimentos.map(m=>`
+      <tr>
+        <td>${new Date(m.hora).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</td>
+        <td>${m.descricao}</td>
+        <td><span class="badge ${m.tipo==='entrada'?'verde':'vermelho'}">${m.tipo==='entrada'?'Entrada':'Saída'}</span></td>
+        <td class="${m.tipo==='entrada'?'valor-entrada':'valor-saida'}">${m.valor.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</td>
+      </tr>
+    `).join('');
+    document.getElementById('tabelaMovimento').innerHTML = htmlMovs;
+  }
 
   let htmlVendas = vendasHoje.map(v => `
     <tr>
@@ -679,6 +696,7 @@ function adicionarItemVenda(){
   carrinho.push(prod);
   atualizarCarrinho();
   field.value = '';
+  field.focus();
 }
 
 function atualizarCarrinho(){
