@@ -96,6 +96,8 @@ button.small{padding:8px 12px;font-size:14px}
 .cupom-pagamento-titulo{font-size:11px;font-weight:bold;margin-bottom:3px}
 .cupom-pagamento-linha{display:flex;justify-content:space-between;font-size:11px;margin:2px 0}
 .cupom-rodape{text-align:center;margin-top:15px;font-size:10px;color:#444}
+.cupom-pix-qr{text-align:center;margin:10px 0}
+.cupom-pix-qr div{display:flex;justify-content:center}
 
 .historico-compras{margin-top:10px;padding:10px;background:#f8fafc;border-radius:6px;border:1px solid var(--borda);font-size:13px}
 
@@ -105,6 +107,7 @@ button.small{padding:8px 12px;font-size:14px}
 
 .container-pix-qrcode {background:#f0fdf4;border:1px dashed #bbf7d0;border-radius:10px;padding:15px;margin-top:15px;text-align:center}
 .box-qrcode {display:flex;justify-content:center;margin:10px 0}
+.pix-valor-destaque{font-size:20px;font-weight:bold;color:var(--sucesso);margin:5px 0}
 
 .abas-periodo {display:flex;gap:5px;margin-bottom:20px;border-bottom:1px solid var(--borda);padding-bottom:10px}
 .abas-periodo button {background:#f1f5f9;color:var(--texto);margin:0;padding:8px 16px;border-radius:20px;font-size:14px}
@@ -124,6 +127,7 @@ button.small{padding:8px 12px;font-size:14px}
   body *{visibility:hidden !important}
   .cupom-impressao,.cupom-impressao *{visibility:visible !important;display:block !important}
   .cupom-impressao{position:absolute;left:0;top:0;width:100% !important;max-width:100% !important;padding:3mm !important}
+  .cupom-pix-qr div{display:flex !important}
   .etiqueta-pagina,.etiqueta-pagina *{visibility:visible !important}
   .etiqueta-pagina{position:absolute;left:0;top:0;width:100%;padding:0;margin:0;display:flex !important;flex-wrap:wrap !important;flex-direction:row !important;gap:1mm}
   .etiqueta-pagina.rolo-termico{flex-direction:column !important}
@@ -204,13 +208,18 @@ button.small{padding:8px 12px;font-size:14px}
     <div id='pag-produtos' class='pagina hidden'>
       <h1 class='titulo-pagina' id="tituloProdutos">📦 Cadastro de Produtos</h1>
       <input placeholder='🔍 Buscar por nome ou código...' id='buscaProd' oninput='listarProdutos()'>
+      <div class='grid-3' style='margin-top:10px;'>
+        <div><label class='rotulo'>Filtrar por Categoria</label><select id='filtroCategoria' onchange='listarProdutos()'><option value=''>Todas as categorias</option></select></div>
+        <div><label class='rotulo'>Filtrar por Tamanho</label><select id='filtroTamanho' onchange='listarProdutos()'><option value=''>Todos os tamanhos</option></select></div>
+        <div style='display:flex;align-items:flex-end;'><button class='secundario' style='margin:0;width:100%;' onclick='limparFiltrosProdutos()'>Limpar Filtros</button></div>
+      </div>
       <input type="hidden" id="prodIdEdicao" value="">
       <div class='grid-form'>
         <div><label class='rotulo'>Nome do Produto</label><input id='prodNome' required></div>
         <div><label class='rotulo'>Código de Barras</label><input id='prodCodigo' required autocomplete='off'></div>
         <div><label class='rotulo'>Marca</label><input id='prodMarca'></div>
-        <div><label class='rotulo'>Categoria</label><input id='prodCategoria'></div>
-        <div><label class='rotulo'>Tamanho</label><input id='prodTamanho'></div>
+        <div><label class='rotulo'>Categoria</label><input id='prodCategoria' list='listaCategoriasDatalist'></div>
+        <div><label class='rotulo'>Tamanho</label><input id='prodTamanho' list='listaTamanhosDatalist'></div>
         <div><label class='rotulo'>Cor</label><input id='prodCor'></div>
         <div><label class='rotulo'>Preço de Custo R$</label><input type='number' step='0.01' id='prodCusto' oninput='calcularLucro()'></div>
         <div><label class='rotulo'>Preço de Venda R$</label><input type='number' step='0.01' id='prodVenda' required oninput='calcularLucro()'></div>
@@ -218,6 +227,8 @@ button.small{padding:8px 12px;font-size:14px}
         <div><label class='rotulo'>Estoque Atual</label><input type='number' min='0' id='prodEstoque' value='0'></div>
         <div><label class='rotulo'>Estoque Mínimo (Alerta)</label><input type='number' min='1' id='prodMinimo' value='3'></div>
       </div>
+      <datalist id='listaCategoriasDatalist'></datalist>
+      <datalist id='listaTamanhosDatalist'></datalist>
       <div class='grupo-botoes'>
         <button id="btnSalvarProduto" onclick='salvarProduto()' class='sucesso'>💾 Salvar Produto</button>
         <button onclick='limparProduto()' class='secundario'>Limpar / Cancelar</button>
@@ -261,8 +272,10 @@ button.small{padding:8px 12px;font-size:14px}
         </div>
         <div id="areaPixQrCode" class="container-pix-qrcode hidden">
           <p style="color:var(--sucesso); font-weight:bold;">📱 Escaneie para pagar via PIX</p>
+          <div class="pix-valor-destaque" id="pixValorDestaque">R$ 0,00</div>
           <div class="box-qrcode" id="qrcodeCanvas"></div>
           <small style="color:#4a5568; word-break: break-all; display:block; margin-top:5px;" id="textoPixCopiaCola"></small>
+          <button type="button" class="small" style="margin-top:10px;" onclick="imprimirPixAvulso()">🖨️ Imprimir / Confirmar Pix Manualmente</button>
         </div>
       </div>
       <div class='grid-3'>
@@ -425,6 +438,7 @@ let db = JSON.parse(localStorage.getItem('dbAnakids') || `{
 let carrinho = []; // Agora estruturado com { produto: obj, quantidade: X }
 let numeroCupom = db.vendas.length + 1;
 let qrcodeGerador = null;
+let ultimoPixPayload = '';
 let periodoSelecionadoRelatorio = 'hoje';
 
 function salvarDB(){localStorage.setItem('dbAnakids', JSON.stringify(db));atualizarPainel()}
@@ -721,9 +735,41 @@ function limparProduto(){
   document.getElementById('prodIdEdicao').value = "";
 }
 
+function popularFiltrosProdutos(){
+  let selCat = document.getElementById('filtroCategoria');
+  let selTam = document.getElementById('filtroTamanho');
+  let dlCat = document.getElementById('listaCategoriasDatalist');
+  let dlTam = document.getElementById('listaTamanhosDatalist');
+  let valorCatAtual = selCat.value;
+  let valorTamAtual = selTam.value;
+
+  let categorias = [...new Set(db.produtos.map(p => (p.categoria||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  let tamanhos = [...new Set(db.produtos.map(p => (p.tamanho||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+
+  selCat.innerHTML = "<option value=''>Todas as categorias</option>" + categorias.map(c=>`<option value="${c}">${c}</option>`).join('');
+  selTam.innerHTML = "<option value=''>Todos os tamanhos</option>" + tamanhos.map(t=>`<option value="${t}">${t}</option>`).join('');
+  dlCat.innerHTML = categorias.map(c=>`<option value="${c}">`).join('');
+  dlTam.innerHTML = tamanhos.map(t=>`<option value="${t}">`).join('');
+
+  if(categorias.includes(valorCatAtual)) selCat.value = valorCatAtual;
+  if(tamanhos.includes(valorTamAtual)) selTam.value = valorTamAtual;
+}
+
+function limparFiltrosProdutos(){
+  document.getElementById('buscaProd').value = '';
+  document.getElementById('filtroCategoria').value = '';
+  document.getElementById('filtroTamanho').value = '';
+  listarProdutos();
+}
+
 function listarProdutos(apenasBaixoEstoque = false){
+  popularFiltrosProdutos();
   let busca = document.getElementById('buscaProd').value.trim().toLowerCase();
+  let categoriaFiltro = document.getElementById('filtroCategoria').value;
+  let tamanhoFiltro = document.getElementById('filtroTamanho').value;
   let filtrados = db.produtos.filter(p=>p.nome.toLowerCase().includes(busca) || p.codigo.includes(busca));
+  if(categoriaFiltro){ filtrados = filtrados.filter(p => (p.categoria||'') === categoriaFiltro); }
+  if(tamanhoFiltro){ filtrados = filtrados.filter(p => (p.tamanho||'') === tamanhoFiltro); }
   if(apenasBaixoEstoque){ filtrados = filtrados.filter(p => p.estoque <= (p.estoqueMinimo || 3)); }
   let html = filtrados.map(p=>{
     let critico = p.estoque <= p.estoqueMinimo;
@@ -732,6 +778,7 @@ function listarProdutos(apenasBaixoEstoque = false){
         <div class='lista-dados'>
           <strong>${p.nome} ${p.tamanho ? `(${p.tamanho})` : ''}</strong>
           <br><small>Cód: ${p.codigo} • Preço: R$ ${p.precoVenda.toFixed(2)} • <span style="${critico ? "color:var(--erro);font-weight:bold;" : ""}">Estoque: ${p.estoque} un</span></small>
+          <br><small>${p.categoria ? `Categoria: ${p.categoria}` : ''} ${p.tamanho ? ` • Tamanho: ${p.tamanho}` : ''} ${p.cor ? ` • Cor: ${p.cor}` : ''}</small>
         </div>
         <div class="grupo-botoes" style="margin:0;">
           <button class='pequeno alerta' onclick='editarProduto("${p.codigo}")'>Editar</button>
@@ -862,16 +909,26 @@ function recalcularRestante(){
   document.getElementById('vendaPgRestante').style.color = Math.abs(restante) < 0.01 ? 'var(--sucesso)' : 'var(--erro)';
 }
 
+function limparChavePix(chave){
+  if(!chave) return chave;
+  // Se for e-mail, mantém como está. Caso contrário (celular, CPF/CNPJ, aleatória), remove tudo que não for alfanumérico.
+  if(chave.includes('@')) return chave.trim();
+  return chave.replace(/[^a-zA-Z0-9]/g,'').trim();
+}
+
 function criarPayloadPix(chave, nome, valor, cidade = "FORTALEZA") {
   function formatarCampo(id, valorCampo) {
     let len = String(valorCampo).length.toString().padStart(2, '0');
     return id + len + valorCampo;
   }
+  let chaveLimpa = limparChavePix(chave);
+  let nomeFormatado = nome.toUpperCase().substring(0,25);
+  let cidadeFormatada = cidade.toUpperCase().substring(0,15);
   let gui = "br.gov.bcb.pix";
-  let infoAdicional = formatarCampo("00", gui) + formatarCampo("01", chave);
+  let infoAdicional = formatarCampo("00", gui) + formatarCampo("01", chaveLimpa);
   let payload = "000201" + formatarCampo("26", infoAdicional) + "52040000" + "5303986";
   if (valor > 0) { payload += formatarCampo("54", valor.toFixed(2)); }
-  payload += "5802BR" + formatarCampo("59", nome.toUpperCase()) + formatarCampo("60", cidade.toUpperCase()) + "62070503***";
+  payload += "5802BR" + formatarCampo("59", nomeFormatado) + formatarCampo("60", cidadeFormatada) + "62070503***";
   payload += "6304";
   let crc = 0xFFFF;
   for (let c = 0; c < payload.length; c++) {
@@ -885,6 +942,27 @@ function criarPayloadPix(chave, nome, valor, cidade = "FORTALEZA") {
   return payload + crc;
 }
 
+/* Desenha um QR Code de forma segura. A biblioteca qrcodejs tem um bug conhecido
+   ("code length overflow") que trava o script para textos com certos tamanhos
+   (normalmente entre ~190 e ~220 caracteres). Isso fazia o cupom nem chegar a
+   imprimir, pois o erro travava a função antes de chegar no window.print().
+   Aqui tentamos desenhar com nível de correção L (mais tolerante) e, se ainda
+   assim falhar, mostramos o código Pix Copia e Cola em destaque para pagamento
+   manual — a venda e a impressão nunca ficam bloqueadas por causa disso. */
+function desenharQRCodeSeguro(elemento, texto, tamanho){
+  elemento.innerHTML = '';
+  try{
+    return new QRCode(elemento, {
+      text: texto, width: tamanho, height: tamanho,
+      colorDark: "#000000", colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.L
+    });
+  }catch(e){
+    elemento.innerHTML = `<div style="border:1px dashed #999;padding:8px;font-size:10px;text-align:center;color:#555;width:${tamanho}px;">QR Code indisponível para este texto.<br>Use o código Pix Copia e Cola abaixo.</div>`;
+    return null;
+  }
+}
+
 function gerarPixQrCode(){
   let valorPix = parseFloat(document.getElementById('vendaPgPix').value || 0);
   let container = document.getElementById('areaPixQrCode');
@@ -893,20 +971,42 @@ function gerarPixQrCode(){
   if(valorPix <= 0 || !db.configLoja.pixChave || !db.configLoja.pixNome) {
     container.classList.add('hidden');
     canvasDiv.innerHTML = '';
+    ultimoPixPayload = '';
+    if(!db.configLoja.pixChave || !db.configLoja.pixNome){
+      if(valorPix > 0){
+        mostrarMensagem('Aviso','Cadastre a Chave Pix e o Nome do Beneficiário em Configurações para gerar o QR Code!','alerta');
+      }
+    }
     return;
   }
   container.classList.remove('hidden');
-  canvasDiv.innerHTML = '';
   let stringPix = criarPayloadPix(db.configLoja.pixChave, db.configLoja.pixNome, valorPix);
+  ultimoPixPayload = stringPix;
   textCopy.textContent = stringPix;
-  qrcodeGerador = new QRCode(canvasDiv, {
-    text: stringPix,
-    width: 180,
-    height: 180,
-    colorDark : "#000000",
-    colorLight : "#ffffff",
-    correctLevel : QRCode.CorrectLevel.M
-  });
+  document.getElementById('pixValorDestaque').textContent = valorPix.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  qrcodeGerador = desenharQRCodeSeguro(canvasDiv, stringPix, 180);
+}
+
+function imprimirPixAvulso(){
+  if(!ultimoPixPayload){ mostrarMensagem('Erro','Gere o QR Code do Pix primeiro (informe o valor)!','erro'); return; }
+  let valorPix = parseFloat(document.getElementById('vendaPgPix').value || 0);
+  const loja = db.configLoja;
+  const larguraPapel = (loja.impressoraLargura === '58') ? 58 : 80;
+  const larguraUtil = larguraPapel === 58 ? 48 : 72;
+  document.getElementById('areaCupom').style.maxWidth = larguraUtil + 'mm';
+  document.getElementById('areaCupom').innerHTML = `
+    <div class="cupom-cabecalho"><div class="cupom-nome">${loja.nome}</div></div>
+    <div class="cupom-linha"></div>
+    <div style="text-align:center;font-weight:bold;margin:8px 0;">COBRANÇA PIX</div>
+    <div style="text-align:center;font-size:16px;font-weight:bold;">R$ ${valorPix.toFixed(2)}</div>
+    <div class="cupom-pix-qr" id="cupomPixQrAvulso"></div>
+    <div style="font-size:9px;word-break:break-all;text-align:center;margin-top:5px;">${ultimoPixPayload}</div>
+    <div class="cupom-rodape">Escaneie para pagar via Pix</div>
+  `;
+  desenharQRCodeSeguro(document.getElementById('cupomPixQrAvulso'), ultimoPixPayload, 160);
+  // Chamado direto (sem setTimeout) para preservar a ação do usuário.
+  window.print();
+  mostrarMensagem('Sucesso','Comprovante Pix pronto para impressão/confirmação manual!');
 }
 
 function limparVenda(){ carrinho=[]; document.getElementById('vendaDesconto').value = '0'; atualizarCarrinho(); }
@@ -936,6 +1036,23 @@ function finalizarVenda(){
   let clie = document.getElementById('vendaCliente').value;
   let obs = document.getElementById('obsVenda').value.trim();
 
+  // O payload do Pix é sempre remontado agora, na hora exata de finalizar,
+  // com o valor real que está sendo cobrado — nunca usa um QR "guardado" de
+  // antes, para nunca sair com valor desatualizado ou vazio no cupom.
+  let pixPayloadVenda = '';
+  if(pix > 0){
+    if(!db.configLoja.pixChave || !db.configLoja.pixNome){
+      mostrarMensagem('Aviso','Chave Pix ou Nome do Beneficiário não configurados! O cupom sairá sem o QR Code do Pix. Configure em Configurações.','alerta');
+    } else {
+      try{
+        pixPayloadVenda = criarPayloadPix(db.configLoja.pixChave, db.configLoja.pixNome, pix);
+      }catch(e){
+        pixPayloadVenda = '';
+        mostrarMensagem('Aviso','Não foi possível gerar o QR Code do Pix para este cupom.','alerta');
+      }
+    }
+  }
+
   db.vendas.push({
     numero: numeroCupom,
     data: new Date().toISOString(),
@@ -950,13 +1067,12 @@ function finalizarVenda(){
   salvarDB();
   atualizarDadosCaixa();
   listarProdutos();
-  gerarCupom(subtotalVenda, desconto, totalVenda, {dinheiro:din, pix:pix, cartao:cartao}, obs, clie);
-  setTimeout(()=>window.print(), 300);
+  gerarCupom(subtotalVenda, desconto, totalVenda, {dinheiro:din, pix:pix, cartao:cartao}, obs, clie, pixPayloadVenda);
   mostrarMensagem('Sucesso','Venda realizada!');
   limparVenda();
 }
 
-function gerarCupom(subtotal, desconto, total, pags, obs, clienteSelect){
+function gerarCupom(subtotal, desconto, total, pags, obs, clienteSelect, pixPayload=''){
   const loja = db.configLoja;
   const data = new Date().toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
   const itensHtml = carrinho.map(item=>`
@@ -986,6 +1102,16 @@ function gerarCupom(subtotal, desconto, total, pags, obs, clienteSelect){
   document.getElementById('areaCupom').style.maxWidth = larguraUtil + 'mm';
   document.getElementById('areaCupom').style.fontSize = fonteBase;
 
+  let pixQrHtml = '';
+  if(pags.pix > 0 && pixPayload){
+    pixQrHtml = `
+      <div class="cupom-linha"></div>
+      <div style="text-align:center;font-weight:bold;font-size:11px;">PAGAMENTO PIX - R$ ${pags.pix.toFixed(2)}</div>
+      <div class="cupom-pix-qr" id="cupomPixQr"></div>
+      <div style="font-size:8px;word-break:break-all;text-align:center;">${pixPayload}</div>
+    `;
+  }
+
   const cupomHtml = `
     <div class="cupom-cabecalho"><div class="cupom-nome">${loja.nome}</div><div class="cupom-dados">CNPJ: ${loja.cnpj}</div><div class="cupom-dados">${loja.endereco}</div></div>
     <div class="cupom-linha"></div>
@@ -1003,6 +1129,7 @@ function gerarCupom(subtotal, desconto, total, pags, obs, clienteSelect){
     <div class="cupom-linha"></div>
     ${totalLinhasHtml}
     <div class="cupom-pagamento">${pagamentosLinhas}</div>
+    ${pixQrHtml}
     ${obs?`<div style="font-size:10px;">Obs: ${obs}</div>`:''}
     <div class="cupom-linha"></div>
     <div style="font-size:10px;text-align:center;margin-top:6px;">Trocas e devoluções em até 3 dias mediante apresentação deste cupom.</div>
@@ -1011,7 +1138,15 @@ function gerarCupom(subtotal, desconto, total, pags, obs, clienteSelect){
     <div class="cupom-rodape" style="margin-top:2px;">Volte sempre!</div>
   `;
   document.getElementById('areaCupom').innerHTML = cupomHtml;
+
+  if(pags.pix > 0 && pixPayload){
+    desenharQRCodeSeguro(document.getElementById('cupomPixQr'), pixPayload, 140);
+  }
+
   numeroCupom++;
+  // Chamado direto (sem setTimeout) logo após montar o HTML do cupom, para
+  // garantir que a impressão sempre dispare mesmo se algo no QR falhar.
+  window.print();
 }
 
 /* CAIXA E FILTROS DE HISTÓRICO/RELATÓRIOS */
@@ -1210,7 +1345,7 @@ function gerarPreview(){
         <div class='et-nome' style='font-size:${fNome}px;'>${prod.nome}</div>
         ${mostrarMarca && prod.marca?`<div class='et-marca' style='font-size:${fMarca}px;'>${prod.marca}</div>`:''}
         <div class='et-preco' style='font-size:${fPreco}px;'>R$ ${prod.precoVenda.toFixed(2)}</div>
-        <svg class='et-codigo' style='height:${alturaCodigo}px;' jsbarcode-format="CODE128" jsbarcode-value="${prod.codigo}" jsbarcode-textmargin="0" jsbarcode-fontsize="8"></svg>
+        <svg class='et-codigo'></svg>
       </div>
     `;
   }
@@ -1219,7 +1354,34 @@ function gerarPreview(){
   let classeRolo = ehRolo ? 'rolo-termico' : '';
   document.getElementById('previewEtiquetas').innerHTML = `<div class='etiqueta-pagina ${classeRolo}' style='max-width:${larguraPagina}mm;'>${htmlEtiquetas}</div>`;
   document.getElementById('previewEtiquetas').classList.remove('hidden');
-  JsBarcode(".et-codigo").init();
+
+  // Gera cada código de barras individualmente, com largura de barra (module width)
+  // proporcional ao tamanho físico da etiqueta. Isso evita que o SVG nasça enorme
+  // (largura/altura padrão do JsBarcode) e seja espremido pelo CSS até virar um
+  // borrão preto — o problema visual relatado quando etiquetas pequenas eram usadas.
+  let pxPorMm = 3.78; // aprox. 96dpi
+  let larguraDisponivelPx = Math.max(20, (largMm - 4) * pxPorMm);
+  // CODE128 usa ~11 módulos por caractere + margens; estima nº de módulos:
+  let modulosEstimados = Math.max(1, prod.codigo.length) * 11 + 35;
+  let moduloPx = larguraDisponivelPx / modulosEstimados;
+  moduloPx = Math.min(2.2, Math.max(0.85, moduloPx)); // limite mínimo evita "sumir", limite máximo evita ficar grosso demais
+  let alturaBarraPx = Math.max(18, Math.round(alturaCodigo * 2.2));
+
+  document.querySelectorAll('#previewEtiquetas .et-codigo').forEach(svg=>{
+    try{
+      JsBarcode(svg, prod.codigo, {
+        format: "CODE128",
+        width: moduloPx,
+        height: alturaBarraPx,
+        displayValue: false,
+        margin: 0,
+        background: "#ffffff",
+        lineColor: "#000000"
+      });
+    }catch(e){
+      mostrarMensagem('Erro','Não foi possível gerar o código de barras para este código.','erro');
+    }
+  });
 }
 function imprimirEtiquetas(){
   if(document.getElementById('previewEtiquetas').innerHTML.trim() !== '') window.print();
