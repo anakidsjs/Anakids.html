@@ -68,6 +68,7 @@ button.small{padding:8px 12px;font-size:14px}
 
 .etiqueta-config{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:15px}
 .etiqueta-pagina{display:flex;flex-wrap:wrap;gap:2mm;padding:3mm;width:100%;max-width:130mm;margin:0 auto}
+.etiqueta-pagina.rolo-termico{max-width:none;flex-direction:column;align-items:center;padding:0;gap:1.5mm}
 .etiqueta{border:1px solid #ddd;padding:1mm 2mm;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:#fff;overflow:hidden;box-sizing:border-box;width:38mm;height:25mm}
 .et-nome{font-size:9px;font-weight:bold;line-height:1.1;text-transform:uppercase;max-height:2.2em;overflow:hidden;margin-bottom:1px}
 .et-marca{font-size:7px;color:#555;margin-bottom:1px}
@@ -112,6 +113,12 @@ button.small{padding:8px 12px;font-size:14px}
 .pdv-item-linha {display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #eee}
 .pdv-item-linha input {margin:0;padding:5px;text-align:center}
 
+.overlay-modal{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:100000}
+.caixa-modal{background:#fff;border-radius:12px;padding:25px;width:360px;max-width:90vw;box-shadow:0 15px 40px rgba(0,0,0,0.25)}
+.caixa-modal h3{margin-bottom:12px;color:var(--texto);font-size:18px}
+.caixa-modal p{font-size:14px;color:var(--texto);white-space:pre-line;line-height:1.5;margin-bottom:15px}
+.caixa-modal .grupo-botoes{margin-top:5px;justify-content:flex-end}
+
 @media print{
   @page{size:auto;margin:0;padding:0}
   body *{visibility:hidden !important}
@@ -119,7 +126,8 @@ button.small{padding:8px 12px;font-size:14px}
   .cupom-impressao{position:absolute;left:0;top:0;width:100% !important;max-width:100% !important;padding:3mm !important}
   .etiqueta-pagina,.etiqueta-pagina *{visibility:visible !important}
   .etiqueta-pagina{position:absolute;left:0;top:0;width:100%;padding:0;margin:0;display:flex !important;flex-wrap:wrap !important;flex-direction:row !important;gap:1mm}
-  .etiqueta{border:none !important;page-break-inside:avoid !important;padding:0;display:flex !important;width:38mm !important;height:25mm !important}
+  .etiqueta-pagina.rolo-termico{flex-direction:column !important}
+  .etiqueta{border:none !important;page-break-inside:avoid !important;padding:0;display:flex !important}
   .et-codigo{height:12px !important;display:block !important}
   *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
 }
@@ -161,6 +169,7 @@ button.small{padding:8px 12px;font-size:14px}
         <div class='card clicavel' onclick='abrirPagina("produtos")'><span>Produtos Cadastrados</span><b id='qtdProdutos'>0</b></div>
         <div class='card clicavel' onclick='abrirPagina("clientes")'><span>Clientes Cadastrados</span><b id='qtdClientes'>0</b></div>
         <div class='card destaque clicavel' onclick='abrirPagina("produtos", "baixo-estoque")'><span>Alertas de Estoque Baixo</span><b id='qtdEstoqueBaixo'>0</b></div>
+        <div class='card destaque clicavel' onclick='abrirPagina("clientes", "aniversariantes")'><span>🎂 Aniversariantes do Mês</span><b id='qtdAniversariantes'>0</b></div>
         <div class='card verde clicavel' onclick='abrirPagina("caixa")'><span>Saldo em Caixa</span><b id='saldoCaixa'>R$ 0,00</b></div>
       </div>
     </div>
@@ -173,6 +182,7 @@ button.small{padding:8px 12px;font-size:14px}
         <div><label class='rotulo'>Nome do Cliente</label><input id='clienteNome' required></div>
         <div><label class='rotulo'>CPF</label><input id='clienteCpf' placeholder='000.000.000-00'></div>
         <div><label class='rotulo'>Telefone / WhatsApp</label><input id='clienteContato' placeholder='(00) 00000-0000'></div>
+        <div><label class='rotulo'>Endereço</label><input id='clienteEndereco' placeholder='Rua, número - Bairro, Cidade - UF'></div>
         <div><label class='rotulo'>Dia Aniversário</label><select id='aniversarioDia' required><option value=''>Escolha</option></select></div>
         <div><label class='rotulo'>Mês Aniversário</label>
           <select id='aniversarioMes' required>
@@ -233,8 +243,16 @@ button.small{padding:8px 12px;font-size:14px}
         <div id='listaItensVenda' style="margin-top:10px;"><p style='color:var(--cinza)'>Nenhum item adicionado</p></div>
       </div>
 
+      <div class='card' style='margin-bottom: 15px; background: #fff8e1;'>
+        <h4>🏷️ Desconto</h4>
+        <div class='grid-form' style='margin-top: 10px;'>
+          <div><label class='rotulo'>Desconto R$</label><input type='number' step='0.01' min='0' id='vendaDesconto' value='0' oninput='atualizarCarrinho()'></div>
+        </div>
+      </div>
+
       <div class='card' style='margin-bottom: 15px; background: #fafafa;'>
         <h4>💰 Divisão do Pagamento</h4>
+        <div id='resumoDesconto' class='hidden' style='font-size:14px;color:var(--cinza);margin-bottom:10px;'></div>
         <div class='grid-form' style='margin-top: 10px;'>
           <div><label class='rotulo'>Valor em Dinheiro R$</label><input type='number' step='0.01' id='vendaPgDinheiro' value='0' oninput='recalcularRestante()'></div>
           <div><label class='rotulo'>Valor em Pix R$</label><input type='number' step='0.01' id='vendaPgPix' value='0' oninput='recalcularRestante();gerarPixQrCode();'></div>
@@ -332,7 +350,26 @@ button.small{padding:8px 12px;font-size:14px}
       <div class='etiqueta-config'>
         <div><label class='rotulo'>Código do Produto</label><input id='etqCodigo' placeholder='Bipe ou digite o código' autocomplete='off'></div>
         <div><label class='rotulo'>Quantidade de Cópias</label><input type='number' min='1' value='1' id='etqQtd'></div>
-        <div><label class='rotulo'>Gabarito</label><select id='etqTamanho'><option value='38x25'>38 x 25 mm</option></select></div>
+        <div><label class='rotulo'>Gabarito</label>
+          <select id='etqTamanho'>
+            <option value='30x20'>30 x 20 mm</option>
+            <option value='38x25' selected>38 x 25 mm (Padrão)</option>
+            <option value='40x25'>40 x 25 mm</option>
+            <option value='40x30'>40 x 30 mm</option>
+            <option value='50x30'>50 x 30 mm</option>
+            <option value='50x40'>50 x 40 mm</option>
+            <option value='60x40'>60 x 40 mm</option>
+            <option value='80x40'>80 x 40 mm (Rolo térmico largo)</option>
+            <option value='100x50'>100 x 50 mm</option>
+          </select>
+        </div>
+        <div><label class='rotulo'>Impressora</label>
+          <select id='etqTipoImpressora' onchange='alternarTipoImpressora()'>
+            <option value='folha'>Folha A4 (várias por página)</option>
+            <option value='termica58'>Térmica - Rolo 58mm</option>
+            <option value='termica80'>Térmica - Rolo 80mm</option>
+          </select>
+        </div>
         <div><label class='rotulo'>Exibir Marca?</label><select id='etqMarca'><option value='sim'>Sim</option><option value='nao'>Não</option></select></div>
       </div>
       <div class='grupo-botoes'>
@@ -347,11 +384,17 @@ button.small{padding:8px 12px;font-size:14px}
       <div class='grid-form'>
         <div><label class='rotulo'>Razão Social</label><input id='configNome' value='ANAKIDS MODA INFANTIL'></div>
         <div><label class='rotulo'>CNPJ</label><input id='configCnpj' value='00.000.000/0000-00'></div>
-        <div><label class='rotulo'>Endereço</label><input id='configEndereco' value='Fortaleza, Ceará'></div>
+        <div><label class='rotulo'>Endereço</label><input id='configEndereco' value='Av. C, 13 - Nova Metrópole, Caucaia - CE, 61604-000'></div>
         <div><label class='rotulo'>Telefone</label><input id='configTelefone' value='(85) 99999-9999'></div>
         <div><label class='rotulo'>Chave PIX da Loja</label><input id='configPixChave' placeholder='Celular, CNPJ, E-mail ou Aleatória'></div>
         <div><label class='rotulo'>Nome do Beneficiário Pix</label><input id='configPixNome' placeholder='Nome completo ou Razão Social'></div>
         <div><label class='rotulo'>Rodapé do Cupom</label><input id='configRodape' value='Obrigado pela preferência! Volte sempre!'></div>
+        <div><label class='rotulo'>Largura da Impressora Térmica (Cupom)</label>
+          <select id='configImpressoraLargura'>
+            <option value='58'>58 mm</option>
+            <option value='80' selected>80 mm</option>
+          </select>
+        </div>
       </div>
       <button onclick='saveConfigCompleto()' class='sucesso'>💾 Salvar Configurações</button>
     </div>
@@ -370,11 +413,12 @@ let db = JSON.parse(localStorage.getItem('dbAnakids') || `{
   "configLoja": {
     "nome": "ANAKIDS MODA INFANTIL",
     "cnpj": "00.000.000/0000-00",
-    "endereco": "Fortaleza, Ceará",
+    "endereco": "Av. C, 13 - Nova Metrópole, Caucaia - CE, 61604-000",
     "telefone": "(85) 99999-9999",
     "rodape": "Obrigado pela preferência! Volte sempre!",
     "pixChave": "",
-    "pixNome": ""
+    "pixNome": "",
+    "impressoraLargura": "80"
   }
 }`);
 
@@ -390,6 +434,32 @@ function mostrarMensagem(titulo, texto, tipo='sucesso'){
   div.innerHTML = `<strong>${titulo}</strong><br>${texto}`;
   document.body.appendChild(div);
   setTimeout(()=>div.remove(), 4000);
+}
+
+/* MODAL DE CONFIRMAÇÃO CUSTOMIZADO
+   (substitui window.confirm/alert, que podem ficar bloqueados em
+   navegadores/pré-visualizações dentro de iframe/webview, causando
+   botões "sem reação" como o de fechar caixa e excluir cadastros) */
+function confirmarAcao(titulo, mensagem, aoConfirmar, textoBotaoOk='Confirmar'){
+  document.querySelectorAll('.overlay-modal').forEach(m=>m.remove());
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay-modal';
+  overlay.innerHTML = `
+    <div class='caixa-modal'>
+      <h3>${titulo}</h3>
+      <p>${mensagem}</p>
+      <div class='grupo-botoes'>
+        <button class='secundario' id='btnModalCancelar'>Cancelar</button>
+        <button class='erro' id='btnModalConfirmar'>${textoBotaoOk}</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', (e)=>{ if(e.target === overlay) overlay.remove(); });
+  overlay.querySelector('#btnModalCancelar').onclick = ()=> overlay.remove();
+  overlay.querySelector('#btnModalConfirmar').onclick = ()=>{
+    overlay.remove();
+    aoConfirmar();
+  };
 }
 
 function entrarSistema(){
@@ -429,6 +499,13 @@ function abrirPagina(nome, filtro=''){
     listarProdutos(false);
   }
 
+  if(nome === 'clientes' && filtro === 'aniversariantes'){
+    document.getElementById('buscaCliente').value = '';
+    listarClientes(true);
+  } else if(nome === 'clientes'){
+    listarClientes(false);
+  }
+
   if(nome === 'pdv') {
     atualizarSelectClientesVenda();
     setTimeout(() => { document.getElementById('campoLeitura').focus(); }, 50);
@@ -444,6 +521,9 @@ function atualizarPainel(){
   document.getElementById('qtdClientes').textContent = db.clientes.length;
   let estoqueBaixo = db.produtos.filter(p => p.estoque <= (p.estoqueMinimo || 3)).length;
   document.getElementById('qtdEstoqueBaixo').textContent = estoqueBaixo;
+  let mesAtual = new Date().getMonth() + 1;
+  let aniversariantesMes = db.clientes.filter(c => c.aniversarioMes === mesAtual).length;
+  document.getElementById('qtdAniversariantes').textContent = aniversariantesMes;
   let saldo = db.caixaAberto ? db.caixaAberto.saldoAtual : 0;
   document.getElementById('saldoCaixa').textContent = saldo.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 }
@@ -456,6 +536,7 @@ function carregarConfig(){
   document.getElementById('configPixChave').value = db.configLoja.pixChave || '';
   document.getElementById('configPixNome').value = db.configLoja.pixNome || '';
   document.getElementById('configRodape').value = db.configLoja.rodape;
+  document.getElementById('configImpressoraLargura').value = db.configLoja.impressoraLargura || '80';
 }
 function saveConfigCompleto(){
   db.configLoja.nome = document.getElementById('configNome').value.trim();
@@ -465,6 +546,7 @@ function saveConfigCompleto(){
   db.configLoja.pixChave = document.getElementById('configPixChave').value.trim();
   db.configLoja.pixNome = document.getElementById('configPixNome').value.trim();
   db.configLoja.rodape = document.getElementById('configRodape').value.trim();
+  db.configLoja.impressoraLargura = document.getElementById('configImpressoraLargura').value;
   salvarDB();
   mostrarMensagem('Sucesso','Configurações salvas!');
 }
@@ -480,6 +562,7 @@ function salvarCliente(){
     nome: nomeCli,
     clienteCpf: document.getElementById('clienteCpf').value.trim(),
     contato: document.getElementById('clienteContato').value.trim(),
+    endereco: document.getElementById('clienteEndereco').value.trim(),
     aniversarioDia: parseInt(document.getElementById('aniversarioDia').value) || 0,
     aniversarioMes: parseInt(document.getElementById('aniversarioMes').value) || 0
   };
@@ -509,6 +592,7 @@ function editarCliente(id) {
   document.getElementById('clienteNome').value = c.nome;
   document.getElementById('clienteCpf').value = c.clienteCpf || '';
   document.getElementById('clienteContato').value = c.contato || '';
+  document.getElementById('clienteEndereco').value = c.endereco || '';
   document.getElementById('aniversarioDia').value = c.aniversarioDia || '';
   document.getElementById('aniversarioMes').value = c.aniversarioMes || '';
   document.getElementById('btnSalvarCliente').className = 'alerta';
@@ -524,19 +608,22 @@ function limparCliente(){
   document.getElementById('clienteIdEdicao').value = "";
 }
 
-function listarClientes(){
+function listarClientes(apenasAniversariantes = false){
   let busca = document.getElementById('buscaCliente').value.trim().toLowerCase();
+  let mesAtual = new Date().getMonth() + 1;
   let filtradas = db.clientes.filter(c=>c.nome.toLowerCase().includes(busca) || (c.clienteCpf && c.clienteCpf.includes(busca)));
+  if(apenasAniversariantes){ filtradas = filtradas.filter(c => c.aniversarioMes === mesAtual); }
   let html = filtradas.map(c=>{
     let compras = db.vendas.filter(v => v.cliente === c.nome);
     let totalGasto = compras.reduce((sum, v) => sum + v.total, 0);
     let histHtml = compras.length > 0 
       ? `<div class="historico-compras">🛍️ <b>Histórico:</b> ${compras.length} compras | Total: <b>${totalGasto.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</b></div>`
       : `<div class="historico-compras" style="color:var(--cinza);">Nenhuma compra registrada.</div>`;
+    let seloAniversario = c.aniversarioMes === mesAtual ? `<span class="badge amarelo">🎂 Aniversariante do mês</span>` : '';
     return `
       <div class='lista-item' style="display:block;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div class='lista-dados'><strong>${c.nome}</strong><br><small>CPF: ${c.clienteCpf || 'Não Informado'} • Tel: ${c.contato || 'Sem telefone'}</small></div>
+          <div class='lista-dados'><strong>${c.nome}</strong> ${seloAniversario}<br><small>CPF: ${c.clienteCpf || 'Não Informado'} • Tel: ${c.contato || 'Sem telefone'}</small><br><small>Endereço: ${c.endereco || 'Não informado'}</small></div>
           <div class="grupo-botoes" style="margin:0;">
             <button class='pequeno alerta' onclick='editarCliente(${c.id})'>Editar</button>
             <button class='pequeno erro' onclick='excluirCliente(${c.id})'>Excluir</button>
@@ -546,9 +633,16 @@ function listarClientes(){
       </div>
     `;
   }).join('');
-  document.getElementById('listaClientes').innerHTML = html || '<p style="color:var(--cinza)">Nenhum cliente localizado</p>';
+  document.getElementById('listaClientes').innerHTML = html || (apenasAniversariantes ? '<p style="color:var(--cinza)">Nenhum aniversariante este mês</p>' : '<p style="color:var(--cinza)">Nenhum cliente localizado</p>');
 }
-function excluirCliente(id){if(confirm("Excluir este cliente?")){db.clientes = db.clientes.filter(c=>c.id!==id);salvarDB();listarClientes()}}
+function excluirCliente(id){
+  confirmarAcao('Excluir Cliente', 'Tem certeza que deseja excluir este cliente?\nEsta ação não pode ser desfeita.', ()=>{
+    db.clientes = db.clientes.filter(c=>c.id!==id);
+    salvarDB();
+    listarClientes();
+    mostrarMensagem('Sucesso','Cliente excluído.');
+  }, 'Excluir');
+}
 
 /* GESTÃO E EDIÇÃO DE PRODUTOS */
 function calcularLucro(){
@@ -648,7 +742,14 @@ function listarProdutos(apenasBaixoEstoque = false){
   }).join('');
   document.getElementById('listaProdutos').innerHTML = html || '<p style="color:var(--cinza)">Nenhum produto localizado</p>';
 }
-function excluirProduto(cod){if(confirm("Excluir este produto?")){db.produtos = db.produtos.filter(p=>p.codigo!==cod);salvarDB();listarProdutos()}}
+function excluirProduto(cod){
+  confirmarAcao('Excluir Produto', 'Tem certeza que deseja excluir este produto?\nEsta ação não pode ser desfeita.', ()=>{
+    db.produtos = db.produtos.filter(p=>p.codigo!==cod);
+    salvarDB();
+    listarProdutos();
+    mostrarMensagem('Sucesso','Produto excluído.');
+  }, 'Excluir');
+}
 
 /* OPERAÇÕES DO PDV / DINÂMICA DE QUANTIDADE */
 function adicionarItemVenda(){
@@ -694,10 +795,20 @@ function alterarQuantidadePdv(index, novaQtd) {
   atualizarCarrinho();
 }
 
+function calcularTotalCarrinho(){
+  let subtotal = carrinho.reduce((s,i)=>s + (i.produto.precoVenda * i.quantidade), 0);
+  let desconto = parseFloat(document.getElementById('vendaDesconto').value || 0);
+  if(desconto < 0) desconto = 0;
+  if(desconto > subtotal) desconto = subtotal;
+  let total = subtotal - desconto;
+  return { subtotal, desconto, total };
+}
+
 function atualizarCarrinho(){
   if(carrinho.length === 0) {
     document.getElementById('listaItensVenda').innerHTML = '<p style="color:var(--cinza)">Aguardando mercadorias...</p>';
     document.getElementById('totalVenda').textContent = `Total Geral: R$ 0,00`;
+    document.getElementById('resumoDesconto').classList.add('hidden');
     document.getElementById('vendaPgDinheiro').value = "0.00";
     document.getElementById('vendaPgPix').value = "0.00";
     document.getElementById('vendaPgCartao').value = "0.00";
@@ -705,23 +816,32 @@ function atualizarCarrinho(){
     return;
   }
 
-  let total = 0;
   let html = carrinho.map((item, idx) => {
-    let subtotal = item.produto.precoVenda * item.quantidade;
-    total += subtotal;
+    let subtotalItem = item.produto.precoVenda * item.quantidade;
     return `
       <div class="pdv-item-linha">
         <div><strong>${item.produto.nome}</strong><br><small style="color:var(--cinza)">${item.produto.codigo}</small></div>
         <div><input type="number" min="1" value="${item.quantidade}" onchange="alterarQuantidadePdv(${idx}, this.value)"></div>
         <div style="text-align:center;">R$ ${item.produto.precoVenda.toFixed(2)}</div>
-        <div style="text-align:center; font-weight:bold;">R$ ${subtotal.toFixed(2)}</div>
+        <div style="text-align:center; font-weight:bold;">R$ ${subtotalItem.toFixed(2)}</div>
         <div><button class='pequeno erro' onclick='removerItemCarrinho(${idx})'>❌</button></div>
       </div>
     `;
   }).join('');
 
   document.getElementById('listaItensVenda').innerHTML = html;
+
+  let { subtotal, desconto, total } = calcularTotalCarrinho();
   document.getElementById('totalVenda').textContent = `Total Geral: ${total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`;
+
+  let resumoDesconto = document.getElementById('resumoDesconto');
+  if(desconto > 0){
+    resumoDesconto.classList.remove('hidden');
+    resumoDesconto.textContent = `Subtotal: ${subtotal.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}  •  Desconto: -${desconto.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`;
+  } else {
+    resumoDesconto.classList.add('hidden');
+    resumoDesconto.textContent = '';
+  }
 
   document.getElementById('vendaPgDinheiro').value = total.toFixed(2);
   document.getElementById('vendaPgPix').value = "0.00";
@@ -733,7 +853,7 @@ function atualizarCarrinho(){
 function removerItemCarrinho(index){ carrinho.splice(index, 1); atualizarCarrinho(); }
 
 function recalcularRestante(){
-  let total = carrinho.reduce((s,i)=>s + (i.produto.precoVenda * i.quantidade), 0);
+  let { total } = calcularTotalCarrinho();
   let din = parseFloat(document.getElementById('vendaPgDinheiro').value || 0);
   let pix = parseFloat(document.getElementById('vendaPgPix').value || 0);
   let cartao = parseFloat(document.getElementById('vendaPgCartao').value || 0);
@@ -789,12 +909,12 @@ function gerarPixQrCode(){
   });
 }
 
-function limparVenda(){ carrinho=[]; atualizarCarrinho(); }
+function limparVenda(){ carrinho=[]; document.getElementById('vendaDesconto').value = '0'; atualizarCarrinho(); }
 
 function finalizarVenda(){
   if(carrinho.length===0){mostrarMensagem('Erro','Carrinho vazio!','erro');return}
   if(!db.caixaAberto){mostrarMensagem('Erro','Abra o caixa antes de vender!','erro');return}
-  let totalVenda = carrinho.reduce((s,i)=> s + (i.produto.precoVenda * i.quantidade), 0);
+  let { subtotal: subtotalVenda, desconto, total: totalVenda } = calcularTotalCarrinho();
   let din = parseFloat(document.getElementById('vendaPgDinheiro').value || 0);
   let pix = parseFloat(document.getElementById('vendaPgPix').value || 0);
   let cartao = parseFloat(document.getElementById('vendaPgCartao').value || 0);
@@ -820,6 +940,8 @@ function finalizarVenda(){
     numero: numeroCupom,
     data: new Date().toISOString(),
     itens: JSON.parse(JSON.stringify(carrinho)),
+    subtotal: subtotalVenda,
+    desconto: desconto,
     total: totalVenda,
     pagamentos: { dinheiro: din, pix: pix, cartao: cartao },
     cliente: clie
@@ -828,13 +950,13 @@ function finalizarVenda(){
   salvarDB();
   atualizarDadosCaixa();
   listarProdutos();
-  gerarCupom(totalVenda, {dinheiro:din, pix:pix, cartao:cartao}, obs, clie);
+  gerarCupom(subtotalVenda, desconto, totalVenda, {dinheiro:din, pix:pix, cartao:cartao}, obs, clie);
   setTimeout(()=>window.print(), 300);
   mostrarMensagem('Sucesso','Venda realizada!');
   limparVenda();
 }
 
-function gerarCupom(total, pags, obs, clienteSelect){
+function gerarCupom(subtotal, desconto, total, pags, obs, clienteSelect){
   const loja = db.configLoja;
   const data = new Date().toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
   const itensHtml = carrinho.map(item=>`
@@ -844,18 +966,49 @@ function gerarCupom(total, pags, obs, clienteSelect){
   if(pags.dinheiro > 0) pagamentosLinhas += `<div class="cupom-pagamento-linha"><span>Dinheiro:</span><span>R$ ${pags.dinheiro.toFixed(2)}</span></div>`;
   if(pags.pix > 0) pagamentosLinhas += `<div class="cupom-pagamento-linha"><span>Pix:</span><span>R$ ${pags.pix.toFixed(2)}</span></div>`;
   if(pags.cartao > 0) pagamentosLinhas += `<div class="cupom-pagamento-linha"><span>Cartão:</span><span>R$ ${pags.cartao.toFixed(2)}</span></div>`;
+
+  let clienteObj = clienteSelect ? db.clientes.find(c => c.nome === clienteSelect) : null;
+  let nomeClienteCupom = clienteObj ? clienteObj.nome : 'Não informado';
+  let enderecoClienteCupom = (clienteObj && clienteObj.endereco) ? clienteObj.endereco : 'Não informado';
+
+  let totalLinhasHtml = desconto > 0 ? `
+    <div class="cupom-total-linha" style="font-weight:normal;font-size:11px;"><span>Subtotal</span><span>R$ ${subtotal.toFixed(2)}</span></div>
+    <div class="cupom-total-linha" style="font-weight:normal;font-size:11px;"><span>Desconto</span><span>-R$ ${desconto.toFixed(2)}</span></div>
+    <div class="cupom-total-linha"><span>TOTAL</span><span>R$ ${total.toFixed(2)}</span></div>
+  ` : `
+    <div class="cupom-total-linha"><span>TOTAL</span><span>R$ ${total.toFixed(2)}</span></div>
+  `;
+
+  // Largura do papel conforme impressora térmica configurada (58mm ou 80mm)
+  const larguraPapel = (loja.impressoraLargura === '58') ? 58 : 80;
+  const larguraUtil = larguraPapel === 58 ? 48 : 72;
+  const fonteBase = larguraPapel === 58 ? '10px' : '11px';
+  document.getElementById('areaCupom').style.maxWidth = larguraUtil + 'mm';
+  document.getElementById('areaCupom').style.fontSize = fonteBase;
+
   const cupomHtml = `
     <div class="cupom-cabecalho"><div class="cupom-nome">${loja.nome}</div><div class="cupom-dados">CNPJ: ${loja.cnpj}</div><div class="cupom-dados">${loja.endereco}</div></div>
     <div class="cupom-linha"></div>
-    <div class="cupom-identificacao"><div>CUPOM DE VENDA Nº ${numeroCupom.toString().padStart(6,'0')}</div><div>Data: ${data}</div><div>Cliente: ${clienteSelect || 'Consumidor Final'}</div></div>
+    <div class="cupom-identificacao">
+      <div>CUPOM DE VENDA Nº ${numeroCupom.toString().padStart(6,'0')}</div>
+      <div>Data: ${data}</div>
+      <div>Cliente: ${nomeClienteCupom}</div>
+      <div>Endereço: ${enderecoClienteCupom}</div>
+    </div>
     <div class="cupom-linha"></div>
-    <table class="cupom-tabela"><tbody>${itensHtml}</tbody></table>
+    <table class="cupom-tabela">
+      <thead><tr><th>Item</th><th style="text-align:right">Qtd</th><th style="text-align:right">Valor</th></tr></thead>
+      <tbody>${itensHtml}</tbody>
+    </table>
     <div class="cupom-linha"></div>
-    <div class="cupom-total-linha"><span>TOTAL</span><span>R$ ${total.toFixed(2)}</span></div>
+    ${totalLinhasHtml}
     <div class="cupom-pagamento">${pagamentosLinhas}</div>
     ${obs?`<div style="font-size:10px;">Obs: ${obs}</div>`:''}
     <div class="cupom-linha"></div>
+    <div style="font-size:10px;text-align:center;margin-top:6px;">Trocas e devoluções em até 3 dias mediante apresentação deste cupom.</div>
+    <div style="font-size:10px;text-align:center;margin-top:3px;">Este cupom não possui valor fiscal.</div>
     <div class="cupom-rodape">${loja.rodape}</div>
+    <div class="cupom-rodape" style="margin-top:2px;">Volte sempre!</div>
   `;
   document.getElementById('areaCupom').innerHTML = cupomHtml;
   numeroCupom++;
@@ -987,28 +1140,28 @@ function registrarLancamento(){
 }
 
 function fecharCaixa(){
-  if(!db.caixaAberto) return;
+  if(!db.caixaAberto){ mostrarMensagem('Erro','Não há caixa aberto para fechar!','erro'); return; }
   let contado = parseFloat(document.getElementById('cxFechamentoContado').value || 0);
   let esperado = db.caixaAberto.saldoAtual;
-  let diferencia = contado - esperado;
+  let diferenca = Math.round((contado - esperado) * 100) / 100;
 
-  let msgConferência = `Fechamento de Caixa:\n\n` +
-    `Saldo Esperado em Dinheiro: R$ ${esperado.toFixed(2)}\n` +
+  let statusDiferenca = diferenca === 0 ? "(Caixa Perfeito!)" : diferenca > 0 ? "(Sobrou Dinheiro)" : "(Faltou Dinheiro)";
+  let msgConferencia = `Saldo Esperado em Dinheiro: R$ ${esperado.toFixed(2)}\n` +
     `Saldo Informado em Dinheiro: R$ ${contado.toFixed(2)}\n` +
-    `Diferença: R$ ${diferenca.toFixed(2)} ` + (diferenca === 0 ? "(Caixa Perfeito!)" : diferencia > 0 ? "(Sobrou Dinheiro)" : "(Faltou Dinheiro)") + 
-    `\n\nConfirma o encerramento do turno?`;
+    `Diferença: R$ ${diferenca.toFixed(2)} ${statusDiferenca}\n\n` +
+    `Confirma o encerramento do turno?`;
 
-  if(confirm(msgConferência)){
+  confirmarAcao('Fechamento de Caixa', msgConferencia, ()=>{
     db.caixaAberto.dataFechamento = new Date().toISOString();
     db.caixaAberto.valorContadoGaveta = contado;
-    db.caixaAberto.diferencaFechamento = diferencia;
+    db.caixaAberto.diferencaFechamento = diferenca;
     db.historicoCaixa.push(JSON.parse(JSON.stringify(db.caixaAberto)));
     db.caixaAberto = null;
     salvarDB();
     verificarStatusCaixa();
     document.getElementById('cxFechamentoContado').value = '';
     mostrarMensagem('Sucesso','Turno encerrado e guardado no histórico!');
-  }
+  }, 'Fechar Caixa');
 }
 
 function atualizarSelectClientesVenda(){
@@ -1020,24 +1173,51 @@ function atualizarSelectClientesVenda(){
 }
 
 /* GERADOR DE ETIQUETAS */
+function alternarTipoImpressora(){
+  let tipo = document.getElementById('etqTipoImpressora').value;
+  let selTamanho = document.getElementById('etqTamanho');
+  // Sugere um tamanho padrão coerente com o tipo de impressora escolhido
+  if(tipo === 'termica58' && !['30x20','38x25','40x25','40x30','50x30'].includes(selTamanho.value)){
+    selTamanho.value = '38x25';
+  } else if(tipo === 'termica80' && !['50x30','50x40','60x40','80x40','100x50'].includes(selTamanho.value)){
+    selTamanho.value = '60x40';
+  }
+}
+
 function gerarPreview(){
   let cod = document.getElementById('etqCodigo').value.trim();
   let qtd = parseInt(document.getElementById('etqQtd').value || 1);
   let prod = db.produtos.find(p=>p.codigo === cod);
   if(!prod){mostrarMensagem('Erro','Código inválido!','erro');return}
+
   let mostrarMarca = document.getElementById('etqMarca').value === 'sim';
+  let tamanhoSel = document.getElementById('etqTamanho').value; // ex: "38x25"
+  let [largMm, altMm] = tamanhoSel.split('x').map(Number);
+  let tipoImpressora = document.getElementById('etqTipoImpressora').value;
+  let ehRolo = tipoImpressora !== 'folha';
+
+  // Escala de fonte proporcional ao tamanho da etiqueta
+  let escala = Math.min(largMm / 38, altMm / 25);
+  let fNome = Math.max(7, Math.round(9 * escala));
+  let fMarca = Math.max(6, Math.round(7 * escala));
+  let fPreco = Math.max(9, Math.round(11 * escala));
+  let alturaCodigo = Math.max(9, Math.round(10 * escala));
+
   let htmlEtiquetas = '';
   for(let i=0;i<qtd;i++){
     htmlEtiquetas += `
-      <div class='etiqueta'>
-        <div class='et-nome'>${prod.nome}</div>
-        ${mostrarMarca && prod.marca?`<div class='et-marca'>${prod.marca}</div>`:''}
-        <div class='et-preco'>R$ ${prod.precoVenda.toFixed(2)}</div>
-        <svg class='et-codigo' jsbarcode-format="CODE128" jsbarcode-value="${prod.codigo}" jsbarcode-textmargin="0" jsbarcode-fontsize="8"></svg>
+      <div class='etiqueta' style='width:${largMm}mm;height:${altMm}mm;'>
+        <div class='et-nome' style='font-size:${fNome}px;'>${prod.nome}</div>
+        ${mostrarMarca && prod.marca?`<div class='et-marca' style='font-size:${fMarca}px;'>${prod.marca}</div>`:''}
+        <div class='et-preco' style='font-size:${fPreco}px;'>R$ ${prod.precoVenda.toFixed(2)}</div>
+        <svg class='et-codigo' style='height:${alturaCodigo}px;' jsbarcode-format="CODE128" jsbarcode-value="${prod.codigo}" jsbarcode-textmargin="0" jsbarcode-fontsize="8"></svg>
       </div>
     `;
   }
-  document.getElementById('previewEtiquetas').innerHTML = `<div class='etiqueta-pagina'>${htmlEtiquetas}</div>`;
+
+  let larguraPagina = ehRolo ? (largMm + 6) : 130;
+  let classeRolo = ehRolo ? 'rolo-termico' : '';
+  document.getElementById('previewEtiquetas').innerHTML = `<div class='etiqueta-pagina ${classeRolo}' style='max-width:${larguraPagina}mm;'>${htmlEtiquetas}</div>`;
   document.getElementById('previewEtiquetas').classList.remove('hidden');
   JsBarcode(".et-codigo").init();
 }
