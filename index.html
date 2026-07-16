@@ -30,6 +30,12 @@ button.small{padding:8px 12px;font-size:14px}
 
 .sidebar{position:fixed;left:0;top:0;width:230px;height:100%;background:#fff;border-right:1px solid var(--borda);padding:20px 0;overflow-y:auto}
 .sidebar-topo{padding:0 20px 20px;border-bottom:1px solid var(--borda);margin-bottom:10px}
+.sidebar-secao{padding:14px 20px 6px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:var(--cinza)}
+.sidebar-rodape{padding:14px 20px;font-size:11px;color:var(--cinza);border-top:1px solid var(--borda);margin-top:15px}
+.subtitulo-secao{font-size:13px;font-weight:600;color:var(--cinza);text-transform:uppercase;letter-spacing:0.5px;margin:22px 0 10px}
+.subtitulo-secao:first-of-type{margin-top:5px}
+.acoes-rapidas{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:5px}
+.acoes-rapidas button{margin:0;flex:1;min-width:160px;padding:13px 16px}
 .sidebar h3{color:var(--p);font-size:20px}
 .sidebar button{background:transparent;color:var(--texto);text-align:left;width:100%;border-radius:0;margin:0;padding:10px 20px;border-left:3px solid transparent}
 .sidebar button:hover,.sidebar button.ativo{background:var(--pClaro);color:var(--p);border-left-color:var(--p)}
@@ -52,6 +58,7 @@ button.small{padding:8px 12px;font-size:14px}
 .badge.verde{background:#e6f9e6;color:#1b5e20}
 .badge.vermelho{background:#ffebee;color:#b71c1c}
 .badge.amarelo{background:#fff8e1;color:#f57f17}
+.badge.cinza{background:#f1f5f9;color:#475569}
 
 .grid-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:15px}
 .grupo-botoes{display:flex;gap:10px;margin-top:15px;flex-wrap:wrap}
@@ -81,21 +88,24 @@ button.small{padding:8px 12px;font-size:14px}
 .caixa-abertos{background:#e6f9e6;color:#1b5e20}
 .caixa-fechado{background:#f1f1f1;color:#666}
 
-.cupom-impressao{max-width:72mm;margin:0 auto;background:#fff;padding:5mm;display:none;box-sizing:border-box;font-family:'Courier New',monospace;line-height:1.3}
+.cupom-impressao{max-width:72mm;margin:0 auto;background:#fff;padding:5mm;display:none;box-sizing:border-box;font-family:'Courier New',monospace;line-height:1.4;color:#000}
 .cupom-cabecalho{text-align:center;margin-bottom:8px}
-.cupom-nome{font-size:16px;font-weight:bold;text-transform:uppercase;margin-bottom:3px}
-.cupom-dados{font-size:11px;color:#333;margin-bottom:2px}
-.cupom-linha{border-bottom:1px dashed #000;margin:5px 0}
-.cupom-identificacao{font-size:11px;margin:8px 0}
-.cupom-tabela{width:100%;font-size:11px;margin:5px 0;border-collapse:collapse}
-.cupom-tabela th{text-align:left;padding:3px 0;border-bottom:1px solid #000}
-.cupom-tabela td{padding:3px 0;vertical-align:top}
+.cupom-nome{font-size:17px;font-weight:bold;text-transform:uppercase;margin-bottom:4px;line-height:1.25}
+.cupom-dados{font-size:11px;color:#000;margin-bottom:2px;line-height:1.35}
+.cupom-linha{border-bottom:1px dashed #000;margin:6px 0}
+.cupom-identificacao{font-size:11px;margin:8px 0;line-height:1.5}
+.cupom-tabela{width:100%;font-size:11px;margin:5px 0;border-collapse:collapse;table-layout:fixed}
+.cupom-tabela th{text-align:left;padding:3px 2px;border-bottom:1px solid #000}
+.cupom-tabela th:nth-child(1){width:58%}
+.cupom-tabela th:nth-child(2){width:18%}
+.cupom-tabela th:nth-child(3){width:24%}
+.cupom-tabela td{padding:3px 2px;vertical-align:top;word-break:break-word;overflow-wrap:break-word;line-height:1.35}
 .cupom-total{margin-top:8px}
-.cupom-total-linha{display:flex;justify-content:space-between;font-size:13px;font-weight:bold;margin:3px 0}
-.cupom-pagamento{margin:8px 0;padding:5px;background:#f9f9f9;border-radius:3px}
+.cupom-total-linha{display:flex;justify-content:space-between;font-size:14px;font-weight:bold;margin:4px 0}
+.cupom-pagamento{margin:8px 0;padding:6px;background:#f9f9f9;border:1px solid #000;border-radius:3px}
 .cupom-pagamento-titulo{font-size:11px;font-weight:bold;margin-bottom:3px}
-.cupom-pagamento-linha{display:flex;justify-content:space-between;font-size:11px;margin:2px 0}
-.cupom-rodape{text-align:center;margin-top:15px;font-size:10px;color:#444}
+.cupom-pagamento-linha{display:flex;justify-content:space-between;font-size:12px;margin:3px 0}
+.cupom-rodape{text-align:center;margin-top:15px;font-size:10px;color:#000}
 .cupom-pix-qr{text-align:center;margin:10px 0}
 .cupom-pix-qr div{display:flex;justify-content:center}
 
@@ -126,13 +136,21 @@ button.small{padding:8px 12px;font-size:14px}
   @page{size:auto;margin:0;padding:0}
   body *{visibility:hidden !important}
   .cupom-impressao,.cupom-impressao *{visibility:visible !important;display:block !important}
-  .cupom-impressao{position:absolute;left:0;top:0;width:100% !important;max-width:100% !important;padding:3mm !important}
+  .cupom-impressao{position:absolute;left:0;top:0;padding:3mm !important;margin:0 !important}
   .cupom-pix-qr div{display:flex !important}
+  .cupom-pagamento{background:#fff !important}
   .etiqueta-pagina,.etiqueta-pagina *{visibility:visible !important}
   .etiqueta-pagina{position:absolute;left:0;top:0;width:100%;padding:0;margin:0;display:flex !important;flex-wrap:wrap !important;flex-direction:row !important;gap:1mm}
   .etiqueta-pagina.rolo-termico{flex-direction:column !important}
   .etiqueta{border:none !important;page-break-inside:avoid !important;padding:0;display:flex !important}
   .et-codigo{height:12px !important;display:block !important}
+  .relatorio-impressao,.relatorio-impressao *{visibility:visible !important;display:block !important}
+  .relatorio-impressao{position:absolute;left:0;top:0;width:100%;max-width:100%;padding:10mm !important;margin:0 !important}
+  .relatorio-impressao table{display:table !important;width:100%;border-collapse:collapse}
+  .relatorio-impressao thead{display:table-header-group !important}
+  .relatorio-impressao tbody{display:table-row-group !important}
+  .relatorio-impressao tr{display:table-row !important}
+  .relatorio-impressao th, .relatorio-impressao td{display:table-cell !important}
   *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
 }
 
@@ -144,37 +162,87 @@ button.small{padding:8px 12px;font-size:14px}
 </head>
 <body>
 
-<div id='telaLogin' class='login'>
+<div id='telaPrimeiroAcesso' class='login hidden'>
   <div class='box-login'>
     <h2>🌸 ANAKIDS ERP</h2>
-    <input id='usuario' placeholder='Usuário' autocomplete='off' value="anakids">
-    <input id='senha' type='password' placeholder='Senha' value="1234">
+    <p style='text-align:center;color:var(--cinza);margin-bottom:15px;font-size:13px;'>Primeiro acesso — crie seu usuário e senha</p>
+    <input id='novoUsuario' placeholder='Escolha um usuário' autocomplete='off'>
+    <input id='novaSenha' type='password' placeholder='Escolha uma senha'>
+    <input id='confirmaSenha' type='password' placeholder='Confirme a senha'>
+    <button onclick='criarAcesso()' class='sucesso'>Criar Acesso e Entrar</button>
+  </div>
+</div>
+
+<div id='telaLogin' class='login hidden'>
+  <div class='box-login'>
+    <h2>🌸 ANAKIDS ERP</h2>
+    <input id='usuario' placeholder='Usuário' autocomplete='off'>
+    <input id='senha' type='password' placeholder='Senha'>
     <button onclick='entrarSistema()'>Acessar Sistema</button>
+    <button class='secundario' style='margin-top:8px;font-size:13px;padding:8px;' onclick='resetarAcesso()'>Esqueci minha senha</button>
   </div>
 </div>
 
 <div id='sistema' class='hidden'>
   <div class='sidebar'>
-    <div class='sidebar-topo'><h3>🌸 ANAKIDS</h3></div>
+    <div class='sidebar-topo'><h3>🌸 ANAKIDS</h3><small style='color:var(--cinza);'>Sistema Comercial</small></div>
+
     <button id='btn-nav-painel' onclick='abrirPagina("painel")' class='ativo'>🏠 Painel Geral</button>
+
+    <div class='sidebar-secao'>Cadastros</div>
     <button id='btn-nav-clientes' onclick='abrirPagina("clientes")'>👥 Clientes</button>
     <button id='btn-nav-produtos' onclick='abrirPagina("produtos")'>📦 Produtos</button>
+    <button id='btn-nav-compras' onclick='abrirPagina("compras")'>📥 Entrada de Mercadoria</button>
+
+    <div class='sidebar-secao'>Operação</div>
     <button id='btn-nav-pdv' onclick='abrirPagina("pdv")'>🛒 PDV / Vendas</button>
     <button id='btn-nav-caixa' onclick='abrirPagina("caixa")'>💵 Caixa Diário</button>
-    <button id='btn-nav-relatorios' onclick='abrirPagina("relatorios")'>📊 Relatórios e Lucros</button>
     <button id='btn-nav-etiquetas' onclick='abrirPagina("etiquetas")'>🏷️ Etiquetas</button>
+
+    <div class='sidebar-secao'>Gestão</div>
+    <button id='btn-nav-relatorios' onclick='abrirPagina("relatorios")'>📊 Relatórios e Lucros</button>
     <button id='btn-nav-config' onclick='abrirPagina("config")'>⚙️ Configurações</button>
+
+    <button onclick='sairSistema()' style='color:var(--erro);margin-top:15px;border-top:1px solid var(--borda);'>🚪 Sair</button>
+    <div class='sidebar-rodape'>ANAKIDS ERP • v2.0</div>
   </div>
+
 
   <div class='main'>
     <div id='pag-painel' class='pagina'>
       <h1 class='titulo-pagina'>🏠 Painel Geral</h1>
+      <div id='avisoBackup' class='destaque-box hidden' style='display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;'>
+        <span id='avisoBackupTexto'></span>
+        <button class='pequeno alerta' style='margin:0;' onclick='exportarBackup()'>💾 Exportar Agora</button>
+      </div>
+
+      <div class='acoes-rapidas'>
+        <button class='sucesso' onclick='abrirPagina("pdv")'>🛒 Nova Venda</button>
+        <button class='alerta' onclick='abrirPagina("produtos");limparProduto();'>📦 Novo Produto</button>
+        <button class='secundario' onclick='abrirPagina("clientes");limparCliente();'>👥 Novo Cliente</button>
+        <button class='secundario' onclick='abrirPagina("relatorios")'>📊 Ver Relatórios</button>
+      </div>
+
+      <div class='subtitulo-secao'>Resumo do Dia</div>
+      <div class='grid-2'>
+        <div class='card verde clicavel' onclick='abrirPagina("relatorios")'><span>Faturamento de Hoje</span><b id='qtdFaturamentoHoje'>R$ 0,00</b></div>
+        <div class='card clicavel' onclick='abrirPagina("relatorios")'><span>Ticket Médio de Hoje</span><b id='qtdTicketMedio'>R$ 0,00</b></div>
+        <div class='card verde clicavel' onclick='abrirPagina("caixa")'><span>Saldo em Caixa</span><b id='saldoCaixa'>R$ 0,00</b></div>
+        <div class='card clicavel' onclick='abrirPagina("produtos")'><span>Valor Investido em Estoque</span><b id='qtdValorEstoque'>R$ 0,00</b></div>
+      </div>
+
+      <div class='subtitulo-secao'>Alertas</div>
+      <div class='grid-2'>
+        <div class='card destaque clicavel' onclick='abrirPagina("produtos", "baixo-estoque")'><span>Estoque Baixo</span><b id='qtdEstoqueBaixo'>0</b></div>
+        <div class='card destaque clicavel' onclick='abrirPagina("produtos", "sem-estoque")'><span>🚫 Sem Estoque</span><b id='qtdSemEstoque'>0</b></div>
+        <div class='card destaque clicavel' onclick='abrirPagina("produtos", "parado")'><span>🐌 Produtos Parados (30+ dias)</span><b id='qtdProdutosParados'>0</b></div>
+        <div class='card destaque clicavel' onclick='abrirPagina("clientes", "aniversariantes")'><span>🎂 Aniversariantes do Mês</span><b id='qtdAniversariantes'>0</b></div>
+      </div>
+
+      <div class='subtitulo-secao'>Cadastros</div>
       <div class='grid-2'>
         <div class='card clicavel' onclick='abrirPagina("produtos")'><span>Produtos Cadastrados</span><b id='qtdProdutos'>0</b></div>
         <div class='card clicavel' onclick='abrirPagina("clientes")'><span>Clientes Cadastrados</span><b id='qtdClientes'>0</b></div>
-        <div class='card destaque clicavel' onclick='abrirPagina("produtos", "baixo-estoque")'><span>Alertas de Estoque Baixo</span><b id='qtdEstoqueBaixo'>0</b></div>
-        <div class='card destaque clicavel' onclick='abrirPagina("clientes", "aniversariantes")'><span>🎂 Aniversariantes do Mês</span><b id='qtdAniversariantes'>0</b></div>
-        <div class='card verde clicavel' onclick='abrirPagina("caixa")'><span>Saldo em Caixa</span><b id='saldoCaixa'>R$ 0,00</b></div>
       </div>
     </div>
 
@@ -207,12 +275,28 @@ button.small{padding:8px 12px;font-size:14px}
 
     <div id='pag-produtos' class='pagina hidden'>
       <h1 class='titulo-pagina' id="tituloProdutos">📦 Cadastro de Produtos</h1>
-      <input placeholder='🔍 Buscar por nome ou código...' id='buscaProd' oninput='listarProdutos()'>
-      <div class='grid-3' style='margin-top:10px;'>
-        <div><label class='rotulo'>Filtrar por Categoria</label><select id='filtroCategoria' onchange='listarProdutos()'><option value=''>Todas as categorias</option></select></div>
-        <div><label class='rotulo'>Filtrar por Tamanho</label><select id='filtroTamanho' onchange='listarProdutos()'><option value=''>Todos os tamanhos</option></select></div>
-        <div style='display:flex;align-items:flex-end;'><button class='secundario' style='margin:0;width:100%;' onclick='limparFiltrosProdutos()'>Limpar Filtros</button></div>
+
+      <div class='card'>
+        <input placeholder='🔍 Buscar por nome ou código...' id='buscaProd' oninput='listarProdutos()'>
+        <button class='pequeno secundario' style='margin-top:10px;' onclick='alternarCategoriasResumo()' id='btnToggleCategorias'>▾ Ver categorias</button>
+        <div id='categoriasResumo' class='hidden' style='margin-top:12px;'></div>
+        <div class='grid-3' style='margin-top:12px;'>
+          <div><label class='rotulo'>Filtrar por Categoria</label><select id='filtroCategoria' onchange='listarProdutos()'><option value=''>Todas as categorias</option></select></div>
+          <div><label class='rotulo'>Filtrar por Tamanho</label><select id='filtroTamanho' onchange='listarProdutos()'><option value=''>Todos os tamanhos</option></select></div>
+          <div><label class='rotulo'>Filtrar por Estoque</label>
+            <select id='filtroEstoque' onchange='listarProdutos()'>
+              <option value=''>Todos</option>
+              <option value='sem'>Sem estoque (0 un)</option>
+              <option value='baixo'>Estoque baixo</option>
+              <option value='disponivel'>Disponível</option>
+              <option value='parado'>🐌 Parado (30+ dias sem vender)</option>
+            </select>
+          </div>
+          <div style='display:flex;align-items:flex-end;'><button class='secundario' style='margin:0;width:100%;' onclick='limparFiltrosProdutos()'>Limpar Filtros</button></div>
+        </div>
       </div>
+
+      <div class='subtitulo-secao'>Cadastrar / Editar Produto</div>
       <input type="hidden" id="prodIdEdicao" value="">
       <div class='grid-form'>
         <div><label class='rotulo'>Nome do Produto</label><input id='prodNome' required></div>
@@ -233,7 +317,33 @@ button.small{padding:8px 12px;font-size:14px}
         <button id="btnSalvarProduto" onclick='salvarProduto()' class='sucesso'>💾 Salvar Produto</button>
         <button onclick='limparProduto()' class='secundario'>Limpar / Cancelar</button>
       </div>
-      <div id='listaProdutos' style='margin-top:20px'></div>
+      <div class='subtitulo-secao'>Produtos Cadastrados</div>
+      <div id='listaProdutos'></div>
+    </div>
+
+    <div id='pag-compras' class='pagina hidden'>
+      <h1 class='titulo-pagina'>📥 Entrada de Mercadoria</h1>
+      <div class='info-box'>Use esta página para registrar chegada de mercadoria de fornecedores. O estoque do produto é atualizado automaticamente.</div>
+      <div class='grid-form'>
+        <div style='grid-column: span 2;'><label class='rotulo'>Produto</label>
+          <input id='compraCodigo' placeholder='Código de barras ou nome do produto' list='listaProdutosCompraDatalist' autocomplete='off' oninput='preencherProdutoCompra()'>
+          <datalist id='listaProdutosCompraDatalist'></datalist>
+        </div>
+        <div><label class='rotulo'>Quantidade Recebida</label><input type='number' min='1' id='compraQtd' value='1'></div>
+        <div><label class='rotulo'>Custo Unitário R$</label><input type='number' step='0.01' min='0' id='compraCusto'></div>
+        <div><label class='rotulo'>Fornecedor</label><input id='compraFornecedor' placeholder='Nome do fornecedor'></div>
+        <div><label class='rotulo'>Nota / Observação</label><input id='compraObs' placeholder='Ex: Nota Fiscal nº 123'></div>
+      </div>
+      <div id='compraProdutoInfo' class='destaque-box hidden'></div>
+      <div class='grupo-botoes'>
+        <button onclick='registrarEntradaMercadoria()' class='sucesso'>📥 Registrar Entrada</button>
+        <button onclick='limparFormCompra()' class='secundario'>Limpar</button>
+      </div>
+      <h3 style='margin-top:25px;'>Últimas Entradas Registradas</h3>
+      <table class='tabela-caixa'>
+        <thead><tr><th>Data</th><th>Produto</th><th>Qtd</th><th>Custo Unit.</th><th>Total</th><th>Fornecedor</th></tr></thead>
+        <tbody id='tabelaEntradasEstoque'></tbody>
+      </table>
     </div>
 
     <div id='pag-pdv' class='pagina hidden'>
@@ -275,7 +385,6 @@ button.small{padding:8px 12px;font-size:14px}
           <div class="pix-valor-destaque" id="pixValorDestaque">R$ 0,00</div>
           <div class="box-qrcode" id="qrcodeCanvas"></div>
           <small style="color:#4a5568; word-break: break-all; display:block; margin-top:5px;" id="textoPixCopiaCola"></small>
-          <button type="button" class="small" style="margin-top:10px;" onclick="imprimirPixAvulso()">🖨️ Imprimir / Confirmar Pix Manualmente</button>
         </div>
       </div>
       <div class='grid-3'>
@@ -334,6 +443,12 @@ button.small{padding:8px 12px;font-size:14px}
           <tbody id='tabelaMovimento'></tbody>
         </table>
       </div>
+
+      <h3 style="margin-top:10px;">🗄️ Histórico de Turnos Anteriores</h3>
+      <table class='tabela-caixa'>
+        <thead><tr><th>Abertura</th><th>Fechamento</th><th>Fundo Inicial</th><th>Saldo Esperado</th><th>Valor Contado</th><th>Diferença</th><th>Ação</th></tr></thead>
+        <tbody id='tabelaHistoricoCaixa'></tbody>
+      </table>
     </div>
 
     <div id='pag-relatorios' class='pagina hidden'>
@@ -346,14 +461,34 @@ button.small{padding:8px 12px;font-size:14px}
         <button id="btn-rel-ano" onclick="mudarPeriodoRelatorio('ano')">Este Ano</button>
       </div>
 
-      <div class='grid-2'>
+      <div class='grid-3'>
         <div class='card' style='background: #f0fdf4;'><span>Faturamento Bruto (<span id="txtFaturamentoPeriodo">Hoje</span>)</span><b id='cxFaturamento'>R$ 0,00</b></div>
         <div class='card' style='background: #fffaf0;'><span>Lucro Líquido Real (<span id="txtLucroPeriodo">Hoje</span>)</span><b id='cxLucroReal'>R$ 0,00</b></div>
+        <div class='card' style='background: #eef2ff;'><span>Ticket Médio do Período</span><b id='cxTicketMedioPeriodo'>R$ 0,00</b></div>
       </div>
-      <br>
-      <h3>Histórico Analítico de Vendas Filtrado</h3>
+
+      <div class='grupo-botoes'>
+        <button onclick='imprimirRelatorioDia()' class='alerta'>🖨️ Imprimir Relatório do Dia</button>
+        <button onclick='exportarRelatorioCSV()' class='sucesso'>⬇️ Exportar Relatório do Dia (CSV)</button>
+      </div>
+
+      <div id='graficoVendas'></div>
+
+      <div class='subtitulo-secao'>🏆 Produtos Mais Vendidos no Período</div>
       <table class='tabela-caixa'>
-        <thead><tr><th>Nº Venda</th><th>Data/Hora</th><th>Cliente</th><th>Pagamento</th><th>Total</th></tr></thead>
+        <thead><tr><th>#</th><th>Produto</th><th style="text-align:center;">Qtd. Vendida</th><th>Receita Gerada</th></tr></thead>
+        <tbody id='tabelaMaisVendidos'></tbody>
+      </table>
+
+      <div class='subtitulo-secao'>⭐ Melhores Clientes no Período</div>
+      <table class='tabela-caixa'>
+        <thead><tr><th>#</th><th>Cliente</th><th style="text-align:center;">Compras</th><th>Total Gasto</th></tr></thead>
+        <tbody id='tabelaTopClientes'></tbody>
+      </table>
+
+      <div class='subtitulo-secao'>Histórico Analítico de Vendas Filtrado</div>
+      <table class='tabela-caixa'>
+        <thead><tr><th>Nº Venda</th><th>Data/Hora</th><th>Cliente</th><th>Pagamento</th><th>Total</th><th>Ação</th></tr></thead>
         <tbody id='tabelaHistoricoVendas'></tbody>
       </table>
     </div>
@@ -410,19 +545,43 @@ button.small{padding:8px 12px;font-size:14px}
         </div>
       </div>
       <button onclick='saveConfigCompleto()' class='sucesso'>💾 Salvar Configurações</button>
+
+      <div class='card' style='margin-top:25px;'>
+        <h3>🔐 Alterar Senha de Acesso</h3>
+        <div class='grid-form' style='margin-top:10px;'>
+          <div><label class='rotulo'>Senha Atual</label><input type='password' id='senhaAtualConfig'></div>
+          <div><label class='rotulo'>Nova Senha</label><input type='password' id='novaSenhaConfig'></div>
+          <div><label class='rotulo'>Confirmar Nova Senha</label><input type='password' id='confirmaSenhaConfig'></div>
+        </div>
+        <button onclick='alterarSenha()' class='alerta'>Alterar Senha</button>
+      </div>
+
+      <div class='card' style='margin-top:20px;'>
+        <h3>💾 Backup e Exportação</h3>
+        <p style='color:var(--cinza);font-size:13px;margin-top:8px;'>Todos os dados ficam salvos apenas neste navegador. Exporte um backup regularmente para não perder produtos, clientes e vendas.</p>
+        <div class='grupo-botoes'>
+          <button onclick='exportarBackup()' class='sucesso'>⬇️ Exportar Backup (JSON)</button>
+          <button onclick="document.getElementById('arquivoBackup').click()" class='alerta'>⬆️ Importar Backup</button>
+        </div>
+        <input type='file' id='arquivoBackup' accept='.json,application/json' class='hidden' onchange='importarBackup(this)'>
+      </div>
     </div>
   </div>
 </div>
 
 <div id='areaCupom' class='cupom-impressao'></div>
+<div id='areaRelatorio' class='relatorio-impressao hidden' style='font-family:Segoe UI, sans-serif;'></div>
 
 <script>
 let db = JSON.parse(localStorage.getItem('dbAnakids') || `{
   "produtos": [],
   "clientes": [],
   "vendas": [],
+  "entradasEstoque": [],
   "caixaAberto": null,
   "historicoCaixa": [],
+  "auth": null,
+  "ultimoBackup": null,
   "configLoja": {
     "nome": "ANAKIDS MODA INFANTIL",
     "cnpj": "00.000.000/0000-00",
@@ -434,6 +593,14 @@ let db = JSON.parse(localStorage.getItem('dbAnakids') || `{
     "impressoraLargura": "80"
   }
 }`);
+if(!db.entradasEstoque) db.entradasEstoque = [];
+if(db.auth === undefined) db.auth = null;
+if(db.ultimoBackup === undefined) db.ultimoBackup = null;
+if(!db.auth){
+  // Credencial padrão de fábrica — pode (e deve) ser trocada em Configurações > Alterar Senha.
+  db.auth = { usuario: 'anakids', senhaHash: hashSimples('1234') };
+  localStorage.setItem('dbAnakids', JSON.stringify(db));
+}
 
 let carrinho = []; // Agora estruturado com { produto: obj, quantidade: X }
 let numeroCupom = db.vendas.length + 1;
@@ -442,6 +609,61 @@ let ultimoPixPayload = '';
 let periodoSelecionadoRelatorio = 'hoje';
 
 function salvarDB(){localStorage.setItem('dbAnakids', JSON.stringify(db));atualizarPainel()}
+
+function exportarBackup(){
+  db.ultimoBackup = new Date().toISOString();
+  let dataStr = JSON.stringify(db, null, 2);
+  let blob = new Blob([dataStr], {type: 'application/json'});
+  let url = URL.createObjectURL(blob);
+  let a = document.createElement('a');
+  let dataHoje = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `backup-anakids-${dataHoje}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  salvarDB();
+  mostrarMensagem('Sucesso','Backup exportado! Guarde o arquivo em local seguro.');
+}
+
+function importarBackup(inputEl){
+  let arquivo = inputEl.files[0];
+  if(!arquivo) return;
+  let leitor = new FileReader();
+  leitor.onload = (e)=>{
+    let novoDb;
+    try{
+      novoDb = JSON.parse(e.target.result);
+    }catch(err){
+      mostrarMensagem('Erro','Arquivo inválido! Selecione um backup .json gerado pelo próprio sistema.','erro');
+      inputEl.value = '';
+      return;
+    }
+    if(!novoDb || !Array.isArray(novoDb.produtos) || !Array.isArray(novoDb.vendas)){
+      mostrarMensagem('Erro','Este arquivo não parece ser um backup válido do ANAKIDS.','erro');
+      inputEl.value = '';
+      return;
+    }
+    confirmarAcao('Importar Backup', 'Isso vai SUBSTITUIR todos os dados atuais (produtos, clientes, vendas, caixa) pelos dados do arquivo selecionado.\nEsta ação não pode ser desfeita.\n\nConfirma a importação?', ()=>{
+      db = novoDb;
+      if(!db.entradasEstoque) db.entradasEstoque = [];
+      if(db.auth === undefined) db.auth = null;
+      if(db.ultimoBackup === undefined) db.ultimoBackup = null;
+      localStorage.setItem('dbAnakids', JSON.stringify(db));
+      numeroCupom = db.vendas.length ? Math.max(...db.vendas.map(v=>v.numero)) + 1 : 1;
+      carregarConfig();
+      atualizarPainel();
+      verificarStatusCaixa();
+      listarClientes();
+      listarProdutos();
+      atualizarSelectClientesVenda();
+      mostrarMensagem('Sucesso','Backup importado com sucesso!');
+      inputEl.value = '';
+    }, 'Importar e Substituir');
+  };
+  leitor.readAsText(arquivo);
+}
 function mostrarMensagem(titulo, texto, tipo='sucesso'){
   const div = document.createElement('div');
   div.className = `mensagem-flutuante message-${tipo} mensagem-${tipo}`;
@@ -476,20 +698,101 @@ function confirmarAcao(titulo, mensagem, aoConfirmar, textoBotaoOk='Confirmar'){
   };
 }
 
+/* Hash simples (não é criptografia forte) só para não deixar a senha
+   gravada em texto puro no localStorage. Como o sistema roda 100% no
+   navegador, não existe autenticação "à prova de servidor" possível —
+   isso aqui apenas evita que qualquer um leia a senha direto do storage. */
+function hashSimples(txt){
+  let hash = 5381;
+  for(let i=0;i<txt.length;i++){ hash = ((hash*33) ^ txt.charCodeAt(i)) >>> 0; }
+  return hash.toString(36);
+}
+
+function iniciarTelaAcesso(){
+  if(db.auth && db.auth.usuario){
+    document.getElementById('telaLogin').classList.remove('hidden');
+  } else {
+    document.getElementById('telaPrimeiroAcesso').classList.remove('hidden');
+  }
+}
+
+function criarAcesso(){
+  let usu = document.getElementById('novoUsuario').value.trim();
+  let sen = document.getElementById('novaSenha').value;
+  let conf = document.getElementById('confirmaSenha').value;
+  if(!usu || !sen){ mostrarMensagem('Erro','Preencha usuário e senha!','erro'); return; }
+  if(sen.length < 4){ mostrarMensagem('Erro','A senha deve ter pelo menos 4 caracteres!','erro'); return; }
+  if(sen !== conf){ mostrarMensagem('Erro','As senhas não coincidem!','erro'); return; }
+
+  db.auth = { usuario: usu.toLowerCase(), senhaHash: hashSimples(sen) };
+  salvarDB();
+  mostrarMensagem('Sucesso','Acesso criado! Você já está logado.');
+  document.getElementById('telaPrimeiroAcesso').classList.add('hidden');
+  entrarNoSistema();
+}
+
 function entrarSistema(){
   let usu = document.getElementById('usuario').value.trim().toLowerCase();
-  let sen = document.getElementById('senha').value.trim();
-  if(usu === 'anakids' && sen === '1234'){
+  let sen = document.getElementById('senha').value;
+  if(db.auth && usu === db.auth.usuario && hashSimples(sen) === db.auth.senhaHash){
     document.getElementById('telaLogin').classList.add('hidden');
-    document.getElementById('sistema').classList.remove('hidden');
-    preencherDiasMes();
-    carregarConfig();
-    atualizarPainel();
-    verificarStatusCaixa();
-    listarClientes();
-    listarProdutos();
-    atualizarSelectClientesVenda();
+    entrarNoSistema();
   } else mostrarMensagem('Erro','Usuário ou senha incorretos!','erro');
+}
+
+/* Redefine o login para o padrão de fábrica (anakids / 1234) sem apagar
+   nenhum dado do negócio (produtos, clientes, vendas, caixa continuam
+   intactos) — serve como saída de emergência caso a senha seja esquecida
+   ou algum acesso antigo tenha ficado gravado no navegador. */
+function resetarAcesso(){
+  confirmarAcao(
+    'Redefinir Acesso',
+    'Isso vai redefinir o login para o padrão de fábrica:\n\nUsuário: anakids\nSenha: 1234\n\nSeus produtos, clientes, vendas e caixa NÃO serão apagados — só o login volta ao padrão.\n\nDepois de entrar, você pode trocar a senha em Configurações.\n\nConfirma a redefinição?',
+    ()=>{
+      db.auth = { usuario: 'anakids', senhaHash: hashSimples('1234') };
+      localStorage.setItem('dbAnakids', JSON.stringify(db));
+      document.getElementById('usuario').value = 'anakids';
+      document.getElementById('senha').value = '1234';
+      mostrarMensagem('Sucesso','Login redefinido! Usuário: anakids / Senha: 1234');
+    },
+    'Redefinir para Padrão'
+  );
+}
+
+function entrarNoSistema(){
+  document.getElementById('sistema').classList.remove('hidden');
+  preencherDiasMes();
+  carregarConfig();
+  atualizarPainel();
+  verificarStatusCaixa();
+  listarClientes();
+  listarProdutos();
+  atualizarSelectClientesVenda();
+}
+
+function sairSistema(){
+  confirmarAcao('Sair do Sistema', 'Deseja realmente sair?', ()=>{
+    document.getElementById('sistema').classList.add('hidden');
+    document.getElementById('usuario').value = '';
+    document.getElementById('senha').value = '';
+    iniciarTelaAcesso();
+  }, 'Sair');
+}
+
+function alterarSenha(){
+  let atual = document.getElementById('senhaAtualConfig').value;
+  let nova = document.getElementById('novaSenhaConfig').value;
+  let conf = document.getElementById('confirmaSenhaConfig').value;
+  if(!db.auth){ mostrarMensagem('Erro','Nenhum acesso configurado.','erro'); return; }
+  if(hashSimples(atual) !== db.auth.senhaHash){ mostrarMensagem('Erro','Senha atual incorreta!','erro'); return; }
+  if(!nova || nova.length < 4){ mostrarMensagem('Erro','A nova senha deve ter pelo menos 4 caracteres!','erro'); return; }
+  if(nova !== conf){ mostrarMensagem('Erro','As senhas não coincidem!','erro'); return; }
+  db.auth.senhaHash = hashSimples(nova);
+  salvarDB();
+  document.getElementById('senhaAtualConfig').value = '';
+  document.getElementById('novaSenhaConfig').value = '';
+  document.getElementById('confirmaSenhaConfig').value = '';
+  mostrarMensagem('Sucesso','Senha alterada com sucesso!');
 }
 
 function preencherDiasMes(){
@@ -506,11 +809,14 @@ function abrirPagina(nome, filtro=''){
   let btn = document.getElementById(`btn-nav-${nome}`);
   if(btn) btn.classList.add('ativo');
 
-  if(nome === 'produtos' && filtro === 'baixo-estoque'){
+  if(nome === 'produtos' && (filtro === 'baixo-estoque' || filtro === 'sem-estoque' || filtro === 'parado')){
     document.getElementById('buscaProd').value = '';
-    listarProdutos(true);
+    document.getElementById('filtroCategoria').value = '';
+    document.getElementById('filtroTamanho').value = '';
+    document.getElementById('filtroEstoque').value = filtro === 'baixo-estoque' ? 'baixo' : (filtro === 'sem-estoque' ? 'sem' : 'parado');
+    listarProdutos();
   } else if(nome === 'produtos'){
-    listarProdutos(false);
+    listarProdutos();
   }
 
   if(nome === 'clientes' && filtro === 'aniversariantes'){
@@ -525,8 +831,15 @@ function abrirPagina(nome, filtro=''){
     setTimeout(() => { document.getElementById('campoLeitura').focus(); }, 50);
   }
 
+  if(nome === 'compras'){
+    listarEntradasEstoque();
+  }
+
   if(nome === 'relatorios' || nome === 'caixa'){
     atualizarDadosCaixa();
+  }
+  if(nome === 'caixa'){
+    renderHistoricoCaixa();
   }
 }
 
@@ -535,11 +848,66 @@ function atualizarPainel(){
   document.getElementById('qtdClientes').textContent = db.clientes.length;
   let estoqueBaixo = db.produtos.filter(p => p.estoque <= (p.estoqueMinimo || 3)).length;
   document.getElementById('qtdEstoqueBaixo').textContent = estoqueBaixo;
+  let semEstoque = db.produtos.filter(p => p.estoque <= 0).length;
+  document.getElementById('qtdSemEstoque').textContent = semEstoque;
+  let parados = db.produtos.filter(p => produtoEstaParado(p)).length;
+  document.getElementById('qtdProdutosParados').textContent = parados;
   let mesAtual = new Date().getMonth() + 1;
   let aniversariantesMes = db.clientes.filter(c => c.aniversarioMes === mesAtual).length;
   document.getElementById('qtdAniversariantes').textContent = aniversariantesMes;
   let saldo = db.caixaAberto ? db.caixaAberto.saldoAtual : 0;
   document.getElementById('saldoCaixa').textContent = saldo.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+
+  // Indicadores rápidos do dia
+  let vendasHojeValidas = filtrarVendasPorPeriodo('hoje').filter(v => !v.cancelada);
+  let faturamentoHoje = vendasHojeValidas.reduce((a,v)=>a+v.total, 0);
+  let ticketMedio = vendasHojeValidas.length ? faturamentoHoje / vendasHojeValidas.length : 0;
+  document.getElementById('qtdFaturamentoHoje').textContent = faturamentoHoje.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  document.getElementById('qtdTicketMedio').textContent = ticketMedio.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+
+  // Valor investido em estoque (custo x quantidade de tudo que está parado nas prateleiras)
+  let valorEstoque = db.produtos.reduce((a,p)=> a + (p.precoCusto||0) * p.estoque, 0);
+  document.getElementById('qtdValorEstoque').textContent = valorEstoque.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+
+  verificarBackupPendente();
+}
+
+/* PRODUTOS PARADOS: sem nenhuma venda (ou sem cadastro recente) há 30+ dias,
+   mas ainda com estoque disponível — sinal de encalhe para o lojista agir
+   (promoção, troca de vitrine, etc). */
+function ultimaVendaProduto(codigo){
+  let datas = [];
+  db.vendas.forEach(v => {
+    if(v.cancelada) return;
+    v.itens.forEach(item => { if(item.produto.codigo === codigo) datas.push(new Date(v.data).getTime()); });
+  });
+  if(datas.length === 0) return null;
+  return new Date(Math.max(...datas));
+}
+
+function produtoEstaParado(p, diasLimite = 30){
+  if(p.estoque <= 0) return false;
+  let ultima = ultimaVendaProduto(p.codigo);
+  let referencia = ultima || (p.dataCadastro ? new Date(p.dataCadastro) : null);
+  if(!referencia) return false;
+  let dias = (Date.now() - referencia.getTime()) / (1000*60*60*24);
+  return dias >= diasLimite;
+}
+
+/* LEMBRETE DE BACKUP SEMANAL */
+function verificarBackupPendente(){
+  let aviso = document.getElementById('avisoBackup');
+  let texto = document.getElementById('avisoBackupTexto');
+  if(!aviso || !texto) return;
+  let dias = db.ultimoBackup ? (Date.now() - new Date(db.ultimoBackup).getTime()) / (1000*60*60*24) : Infinity;
+  if(dias >= 7){
+    aviso.classList.remove('hidden');
+    texto.textContent = db.ultimoBackup
+      ? `⚠️ Já se passaram ${Math.floor(dias)} dias desde o último backup. Exporte um backup atualizado para não correr risco de perder dados.`
+      : `⚠️ Você ainda não fez nenhum backup dos dados deste sistema. Exporte um backup para se proteger contra perda de dados.`;
+  } else {
+    aviso.classList.add('hidden');
+  }
 }
 
 function carregarConfig(){
@@ -566,15 +934,31 @@ function saveConfigCompleto(){
 }
 
 /* GESTÃO E EDIÇÃO DE CLIENTES */
+function somenteDigitos(txt){ return (txt||'').replace(/\D/g,''); }
+
 function salvarCliente(){
   let idEdicao = document.getElementById('clienteIdEdicao').value;
   let nomeCli = document.getElementById('clienteNome').value.trim();
 
   if(!nomeCli){ mostrarMensagem('Erro','O nome do cliente é obrigatório!','erro'); return; }
 
+  let cpfInformado = document.getElementById('clienteCpf').value.trim();
+  let cpfDigits = somenteDigitos(cpfInformado);
+
+  if(cpfDigits){
+    if(cpfDigits.length !== 11){
+      mostrarMensagem('Erro','CPF inválido! Deve conter 11 dígitos.','erro'); return;
+    }
+    let duplicado = db.clientes.find(c => somenteDigitos(c.clienteCpf) === cpfDigits && c.id != idEdicao);
+    if(duplicado){
+      mostrarMensagem('Erro', `Este CPF já está cadastrado para "${duplicado.nome}"! Cadastro bloqueado.`, 'erro');
+      return;
+    }
+  }
+
   let dadosCliente = {
     nome: nomeCli,
-    clienteCpf: document.getElementById('clienteCpf').value.trim(),
+    clienteCpf: cpfInformado,
     contato: document.getElementById('clienteContato').value.trim(),
     endereco: document.getElementById('clienteEndereco').value.trim(),
     aniversarioDia: parseInt(document.getElementById('aniversarioDia').value) || 0,
@@ -693,10 +1077,12 @@ function salvarProduto(){
   if(idEdicao) {
     let index = db.produtos.findIndex(p => p.codigo === idEdicao);
     if(index !== -1) {
+      dadosProd.dataCadastro = db.produtos[index].dataCadastro || new Date().toISOString();
       db.produtos[index] = dadosProd;
       mostrarMensagem('Sucesso','Produto atualizado com sucesso!');
     }
   } else {
+    dadosProd.dataCadastro = new Date().toISOString();
     db.produtos.push(dadosProd);
     mostrarMensagem('Sucesso','Produto catalogado!');
   }
@@ -755,30 +1141,92 @@ function popularFiltrosProdutos(){
   if(tamanhos.includes(valorTamAtual)) selTam.value = valorTamAtual;
 }
 
+/* Painel de resumo por categoria: mostra cada categoria cadastrada com a
+   quantidade de produtos e quantos estão sem estoque, permitindo clicar
+   para filtrar a lista abaixo direto por aquela categoria. */
+function alternarCategoriasResumo(){
+  let container = document.getElementById('categoriasResumo');
+  let btn = document.getElementById('btnToggleCategorias');
+  let abrir = container.classList.contains('hidden');
+  container.classList.toggle('hidden');
+  btn.textContent = abrir ? '▴ Ocultar categorias' : '▾ Ver categorias';
+}
+
+function renderCategoriasResumo(){
+  let container = document.getElementById('categoriasResumo');
+  let categoriaAtiva = document.getElementById('filtroCategoria').value;
+
+  let mapa = {};
+  db.produtos.forEach(p => {
+    let cat = (p.categoria || '').trim() || 'Sem categoria';
+    if(!mapa[cat]) mapa[cat] = { total: 0, semEstoque: 0 };
+    mapa[cat].total++;
+    if(p.estoque <= 0) mapa[cat].semEstoque++;
+  });
+
+  let categorias = Object.keys(mapa).sort((a,b)=>a.localeCompare(b));
+  if(categorias.length === 0){ container.innerHTML = ''; return; }
+
+  let cards = categorias.map(cat => {
+    let info = mapa[cat];
+    let valorFiltro = cat === 'Sem categoria' ? '' : cat;
+    let ativo = categoriaAtiva === valorFiltro && (cat !== 'Sem categoria' || categoriaAtiva === '');
+    let ativaClasse = (categoriaAtiva === valorFiltro) ? "border:2px solid var(--p);" : "";
+    return `
+      <div class='card clicavel' style='padding:12px 14px;${ativaClasse}' onclick="selecionarCategoriaResumo('${valorFiltro.replace(/'/g,"\\'")}')">
+        <span>${cat}</span>
+        <b style='font-size:18px;'>${info.total} ${info.total===1?'produto':'produtos'}</b>
+        ${info.semEstoque > 0 ? `<span class="badge vermelho" style="margin-top:6px;display:inline-block;">${info.semEstoque} sem estoque</span>` : ''}
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = `<label class='rotulo'>Visão por Categoria</label><div class='grid-3'>${cards}</div>`;
+}
+
+function selecionarCategoriaResumo(categoria){
+  document.getElementById('filtroCategoria').value = categoria;
+  listarProdutos();
+}
+
 function limparFiltrosProdutos(){
   document.getElementById('buscaProd').value = '';
   document.getElementById('filtroCategoria').value = '';
   document.getElementById('filtroTamanho').value = '';
+  document.getElementById('filtroEstoque').value = '';
   listarProdutos();
 }
 
-function listarProdutos(apenasBaixoEstoque = false){
+function listarProdutos(){
   popularFiltrosProdutos();
+  renderCategoriasResumo();
   let busca = document.getElementById('buscaProd').value.trim().toLowerCase();
   let categoriaFiltro = document.getElementById('filtroCategoria').value;
   let tamanhoFiltro = document.getElementById('filtroTamanho').value;
+  let estoqueFiltro = document.getElementById('filtroEstoque').value;
   let filtrados = db.produtos.filter(p=>p.nome.toLowerCase().includes(busca) || p.codigo.includes(busca));
   if(categoriaFiltro){ filtrados = filtrados.filter(p => (p.categoria||'') === categoriaFiltro); }
   if(tamanhoFiltro){ filtrados = filtrados.filter(p => (p.tamanho||'') === tamanhoFiltro); }
-  if(apenasBaixoEstoque){ filtrados = filtrados.filter(p => p.estoque <= (p.estoqueMinimo || 3)); }
+  if(estoqueFiltro === 'sem'){ filtrados = filtrados.filter(p => p.estoque <= 0); }
+  else if(estoqueFiltro === 'baixo'){ filtrados = filtrados.filter(p => p.estoque > 0 && p.estoque <= (p.estoqueMinimo || 3)); }
+  else if(estoqueFiltro === 'disponivel'){ filtrados = filtrados.filter(p => p.estoque > (p.estoqueMinimo || 3)); }
+  else if(estoqueFiltro === 'parado'){ filtrados = filtrados.filter(p => produtoEstaParado(p)); }
+
   let html = filtrados.map(p=>{
-    let critico = p.estoque <= p.estoqueMinimo;
+    let semEstoque = p.estoque <= 0;
+    let critico = !semEstoque && p.estoque <= p.estoqueMinimo;
+    let parado = produtoEstaParado(p);
+    let corBorda = semEstoque ? "border-left: 4px solid var(--erro);" : (critico ? "border-left: 4px solid var(--alerta);" : "");
+    let badgeEstoque = semEstoque
+      ? `<span class="badge vermelho">Sem estoque</span>`
+      : (critico ? `<span class="badge amarelo">Estoque baixo</span>` : `<span class="badge verde">Estoque: ${p.estoque} un</span>`);
+    let badgeParado = parado ? `<span class="badge cinza">🐌 Parado</span>` : '';
     return `
-      <div class='lista-item' style='${critico ? "border-left: 4px solid var(--alerta);" : ""}'>
+      <div class='lista-item' style='${corBorda}'>
         <div class='lista-dados'>
-          <strong>${p.nome} ${p.tamanho ? `(${p.tamanho})` : ''}</strong>
-          <br><small>Cód: ${p.codigo} • Preço: R$ ${p.precoVenda.toFixed(2)} • <span style="${critico ? "color:var(--erro);font-weight:bold;" : ""}">Estoque: ${p.estoque} un</span></small>
-          <br><small>${p.categoria ? `Categoria: ${p.categoria}` : ''} ${p.tamanho ? ` • Tamanho: ${p.tamanho}` : ''} ${p.cor ? ` • Cor: ${p.cor}` : ''}</small>
+          <strong>${p.nome} ${p.tamanho ? `(${p.tamanho})` : ''}</strong> ${badgeEstoque} ${badgeParado}
+          <br><small>Cód: ${p.codigo} • Preço: R$ ${p.precoVenda.toFixed(2)} ${!semEstoque && !critico ? '' : `• Estoque: ${p.estoque} un`}</small>
+          <br><small>${p.categoria ? `Categoria: ${p.categoria}` : 'Sem categoria'} ${p.tamanho ? ` • Tamanho: ${p.tamanho}` : ''} ${p.cor ? ` • Cor: ${p.cor}` : ''}</small>
         </div>
         <div class="grupo-botoes" style="margin:0;">
           <button class='pequeno alerta' onclick='editarProduto("${p.codigo}")'>Editar</button>
@@ -796,6 +1244,81 @@ function excluirProduto(cod){
     listarProdutos();
     mostrarMensagem('Sucesso','Produto excluído.');
   }, 'Excluir');
+}
+
+/* CONTROLE DE ENTRADA DE MERCADORIA (COMPRAS DE FORNECEDOR) */
+function popularDatalistCompras(){
+  let dl = document.getElementById('listaProdutosCompraDatalist');
+  dl.innerHTML = db.produtos.map(p => `<option value="${p.codigo}">${p.nome}</option>`).join('');
+}
+
+function preencherProdutoCompra(){
+  let cod = document.getElementById('compraCodigo').value.trim();
+  let info = document.getElementById('compraProdutoInfo');
+  let p = db.produtos.find(x => x.codigo === cod);
+  if(!p){ info.classList.add('hidden'); return; }
+  info.classList.remove('hidden');
+  info.innerHTML = `<strong>${p.nome}</strong> ${p.tamanho?`(${p.tamanho})`:''} — Estoque atual: ${p.estoque} un • Custo atual: R$ ${p.precoCusto.toFixed(2)}`;
+  if(!document.getElementById('compraCusto').value){
+    document.getElementById('compraCusto').value = p.precoCusto.toFixed(2);
+  }
+}
+
+function limparFormCompra(){
+  document.getElementById('compraCodigo').value = '';
+  document.getElementById('compraQtd').value = '1';
+  document.getElementById('compraCusto').value = '';
+  document.getElementById('compraFornecedor').value = '';
+  document.getElementById('compraObs').value = '';
+  document.getElementById('compraProdutoInfo').classList.add('hidden');
+}
+
+function registrarEntradaMercadoria(){
+  let cod = document.getElementById('compraCodigo').value.trim();
+  let qtd = parseInt(document.getElementById('compraQtd').value || 0);
+  let custo = parseFloat(document.getElementById('compraCusto').value || 0);
+  let fornecedor = document.getElementById('compraFornecedor').value.trim();
+  let obs = document.getElementById('compraObs').value.trim();
+
+  let p = db.produtos.find(x => x.codigo === cod);
+  if(!p){ mostrarMensagem('Erro','Produto não encontrado! Verifique o código.','erro'); return; }
+  if(!qtd || qtd <= 0){ mostrarMensagem('Erro','Informe uma quantidade válida!','erro'); return; }
+
+  p.estoque += qtd;
+  if(custo > 0) p.precoCusto = custo;
+
+  db.entradasEstoque.push({
+    data: new Date().toISOString(),
+    codigo: p.codigo,
+    nomeProduto: p.nome,
+    quantidade: qtd,
+    custoUnitario: custo,
+    fornecedor: fornecedor,
+    obs: obs
+  });
+
+  salvarDB();
+  listarProdutos();
+  listarEntradasEstoque();
+  mostrarMensagem('Sucesso',`Estoque de "${p.nome}" atualizado: +${qtd} un.`);
+  limparFormCompra();
+}
+
+function listarEntradasEstoque(){
+  popularDatalistCompras();
+  let entradas = [...db.entradasEstoque].reverse().slice(0, 50);
+  let tbody = document.getElementById('tabelaEntradasEstoque');
+  if(!tbody) return;
+  tbody.innerHTML = entradas.map(e => `
+    <tr>
+      <td>${new Date(e.data).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}</td>
+      <td>${e.nomeProduto}</td>
+      <td>${e.quantidade} un</td>
+      <td>R$ ${e.custoUnitario.toFixed(2)}</td>
+      <td><strong>R$ ${(e.custoUnitario * e.quantidade).toFixed(2)}</strong></td>
+      <td>${e.fornecedor || '-'}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="6" style="color:var(--cinza); text-align:center;">Nenhuma entrada registrada ainda.</td></tr>';
 }
 
 /* OPERAÇÕES DO PDV / DINÂMICA DE QUANTIDADE */
@@ -987,28 +1510,6 @@ function gerarPixQrCode(){
   qrcodeGerador = desenharQRCodeSeguro(canvasDiv, stringPix, 180);
 }
 
-function imprimirPixAvulso(){
-  if(!ultimoPixPayload){ mostrarMensagem('Erro','Gere o QR Code do Pix primeiro (informe o valor)!','erro'); return; }
-  let valorPix = parseFloat(document.getElementById('vendaPgPix').value || 0);
-  const loja = db.configLoja;
-  const larguraPapel = (loja.impressoraLargura === '58') ? 58 : 80;
-  const larguraUtil = larguraPapel === 58 ? 48 : 72;
-  document.getElementById('areaCupom').style.maxWidth = larguraUtil + 'mm';
-  document.getElementById('areaCupom').innerHTML = `
-    <div class="cupom-cabecalho"><div class="cupom-nome">${loja.nome}</div></div>
-    <div class="cupom-linha"></div>
-    <div style="text-align:center;font-weight:bold;margin:8px 0;">COBRANÇA PIX</div>
-    <div style="text-align:center;font-size:16px;font-weight:bold;">R$ ${valorPix.toFixed(2)}</div>
-    <div class="cupom-pix-qr" id="cupomPixQrAvulso"></div>
-    <div style="font-size:9px;word-break:break-all;text-align:center;margin-top:5px;">${ultimoPixPayload}</div>
-    <div class="cupom-rodape">Escaneie para pagar via Pix</div>
-  `;
-  desenharQRCodeSeguro(document.getElementById('cupomPixQrAvulso'), ultimoPixPayload, 160);
-  // Chamado direto (sem setTimeout) para preservar a ação do usuário.
-  window.print();
-  mostrarMensagem('Sucesso','Comprovante Pix pronto para impressão/confirmação manual!');
-}
-
 function limparVenda(){ carrinho=[]; document.getElementById('vendaDesconto').value = '0'; atualizarCarrinho(); }
 
 function finalizarVenda(){
@@ -1053,30 +1554,44 @@ function finalizarVenda(){
     }
   }
 
+  let itensVenda = JSON.parse(JSON.stringify(carrinho));
+
   db.vendas.push({
     numero: numeroCupom,
     data: new Date().toISOString(),
-    itens: JSON.parse(JSON.stringify(carrinho)),
+    itens: itensVenda,
     subtotal: subtotalVenda,
     desconto: desconto,
     total: totalVenda,
     pagamentos: { dinheiro: din, pix: pix, cartao: cartao },
-    cliente: clie
+    cliente: clie,
+    obs: obs,
+    pixPayload: pixPayloadVenda
   });
 
   salvarDB();
   atualizarDadosCaixa();
   listarProdutos();
-  gerarCupom(subtotalVenda, desconto, totalVenda, {dinheiro:din, pix:pix, cartao:cartao}, obs, clie, pixPayloadVenda);
+  gerarCupom(numeroCupom, itensVenda, subtotalVenda, desconto, totalVenda, {dinheiro:din, pix:pix, cartao:cartao}, obs, clie, pixPayloadVenda);
   mostrarMensagem('Sucesso','Venda realizada!');
   limparVenda();
+  numeroCupom++;
 }
 
-function gerarCupom(subtotal, desconto, total, pags, obs, clienteSelect, pixPayload=''){
+/* Reimpressão de um cupom de uma venda já realizada, usando exatamente os
+   dados gravados no momento da venda (itens, valores, pagamento e Pix) —
+   não mexe em estoque nem em caixa, só reemite o comprovante. */
+function reimprimirVenda(numero){
+  let v = db.vendas.find(x => x.numero === numero);
+  if(!v){ mostrarMensagem('Erro','Venda não encontrada!','erro'); return; }
+  gerarCupom(v.numero, v.itens, v.subtotal, v.desconto, v.total, v.pagamentos, v.obs || '', v.cliente || '', v.pixPayload || '', true);
+}
+
+function gerarCupom(numero, itens, subtotal, desconto, total, pags, obs, clienteSelect, pixPayload='', reimpressao=false){
   const loja = db.configLoja;
   const data = new Date().toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
-  const itensHtml = carrinho.map(item=>`
-    <tr><td>${item.produto.nome.substring(0,20)}</td><td style="text-align:right">${item.quantidade}x</td><td style="text-align:right">${item.produto.precoVenda.toFixed(2)}</td></tr>
+  const itensHtml = itens.map(item=>`
+    <tr><td>${item.produto.nome}</td><td style="text-align:right">${item.quantidade}x</td><td style="text-align:right">${item.produto.precoVenda.toFixed(2)}</td></tr>
   `).join('');
   let pagamentosLinhas = '';
   if(pags.dinheiro > 0) pagamentosLinhas += `<div class="cupom-pagamento-linha"><span>Dinheiro:</span><span>R$ ${pags.dinheiro.toFixed(2)}</span></div>`;
@@ -1113,10 +1628,11 @@ function gerarCupom(subtotal, desconto, total, pags, obs, clienteSelect, pixPayl
   }
 
   const cupomHtml = `
+    ${reimpressao ? `<div style="text-align:center;font-weight:bold;font-size:11px;border:1px solid #000;padding:2px 0;margin-bottom:6px;">*** REIMPRESSÃO ***</div>` : ''}
     <div class="cupom-cabecalho"><div class="cupom-nome">${loja.nome}</div><div class="cupom-dados">CNPJ: ${loja.cnpj}</div><div class="cupom-dados">${loja.endereco}</div></div>
     <div class="cupom-linha"></div>
     <div class="cupom-identificacao">
-      <div>CUPOM DE VENDA Nº ${numeroCupom.toString().padStart(6,'0')}</div>
+      <div>CUPOM DE VENDA Nº ${numero.toString().padStart(6,'0')}</div>
       <div>Data: ${data}</div>
       <div>Cliente: ${nomeClienteCupom}</div>
       <div>Endereço: ${enderecoClienteCupom}</div>
@@ -1143,7 +1659,6 @@ function gerarCupom(subtotal, desconto, total, pags, obs, clienteSelect, pixPayl
     desenharQRCodeSeguro(document.getElementById('cupomPixQr'), pixPayload, 140);
   }
 
-  numeroCupom++;
   // Chamado direto (sem setTimeout) logo após montar o HTML do cupom, para
   // garantir que a impressão sempre dispare mesmo se algo no QR falhar.
   window.print();
@@ -1163,6 +1678,67 @@ function verificarStatusCaixa(){
     document.getElementById('aberturaCaixaArea').classList.remove('hidden');
     document.getElementById('movimentoCaixa').classList.add('hidden');
   }
+  renderHistoricoCaixa();
+}
+
+function renderHistoricoCaixa(){
+  let tbody = document.getElementById('tabelaHistoricoCaixa');
+  if(!tbody) return;
+  let turnos = [...db.historicoCaixa].reverse();
+  if(turnos.length === 0){
+    tbody.innerHTML = '<tr><td colspan="7" style="color:var(--cinza); text-align:center;">Nenhum turno encerrado ainda.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = turnos.map((t) => {
+    let indexOriginal = db.historicoCaixa.indexOf(t);
+    let diferenca = t.diferencaFechamento || 0;
+    let corDif = diferenca === 0 ? 'valor-entrada' : (diferenca > 0 ? 'valor-entrada' : 'valor-saida');
+    return `
+      <tr>
+        <td>${new Date(t.dataAbertura).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}</td>
+        <td>${t.dataFechamento ? new Date(t.dataFechamento).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}) : '-'}</td>
+        <td>${t.saldoInicial.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</td>
+        <td>${t.saldoAtual.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</td>
+        <td>${(t.valorContadoGaveta||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</td>
+        <td class="${corDif}">${diferenca.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</td>
+        <td><button class='pequeno secundario' onclick='verMovimentosTurno(${indexOriginal})'>Ver Movimentos</button></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+/* Modal genérico de conteúdo (reaproveita o estilo do modal de confirmação,
+   mas só com um botão de fechar) — usado para exibir as movimentações de
+   um turno de caixa já encerrado. */
+function mostrarModalConteudo(titulo, htmlConteudo){
+  document.querySelectorAll('.overlay-modal').forEach(m=>m.remove());
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay-modal';
+  overlay.innerHTML = `
+    <div class='caixa-modal' style='width:480px;max-height:80vh;overflow-y:auto;'>
+      <h3>${titulo}</h3>
+      <div>${htmlConteudo}</div>
+      <div class='grupo-botoes'>
+        <button class='secundario' id='btnModalFechar'>Fechar</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', (e)=>{ if(e.target === overlay) overlay.remove(); });
+  overlay.querySelector('#btnModalFechar').onclick = ()=> overlay.remove();
+}
+
+function verMovimentosTurno(indexTurno){
+  let t = db.historicoCaixa[indexTurno];
+  if(!t){ mostrarMensagem('Erro','Turno não encontrado!','erro'); return; }
+  let linhas = (t.movimentos || []).map(m => `
+    <tr>
+      <td>${new Date(m.hora).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</td>
+      <td>${m.descricao}</td>
+      <td class="${m.tipo==='entrada'?'valor-entrada':'valor-saida'}">${m.valor.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</td>
+    </tr>
+  `).join('');
+  let tabela = `<table class='tabela-caixa'><thead><tr><th>Hora</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>${linhas || '<tr><td colspan="3" style="color:var(--cinza);">Sem movimentações neste turno.</td></tr>'}</tbody></table>`;
+  mostrarModalConteudo(`Turno de ${new Date(t.dataAbertura).toLocaleDateString('pt-BR')}`, tabela);
 }
 function abrirCaixa(){
   let saldoInicial = parseFloat(document.getElementById('saldoInicial').value || 0);
@@ -1191,26 +1767,33 @@ function mudarPeriodoRelatorio(periodo) {
   atualizarDadosCaixa();
 }
 
-function atualizarDadosCaixa(){
+function filtrarVendasPorPeriodo(periodo){
   let agora = new Date();
-  let vendasFiltradas = db.vendas.filter(v => {
+  return db.vendas.filter(v => {
     let dataVenda = new Date(v.data);
-    if(periodoSelecionadoRelatorio === 'hoje') {
+    if(periodo === 'hoje') {
       return dataVenda.toDateString() === agora.toDateString();
-    } else if(periodoSelecionadoRelatorio === 'semana') {
+    } else if(periodo === 'semana') {
       let umaSemanaAtras = new Date();
       umaSemanaAtras.setDate(agora.getDate() - 7);
       return dataVenda >= umaSemanaAtras;
-    } else if(periodoSelecionadoRelatorio === 'mes') {
+    } else if(periodo === 'mes') {
       return dataVenda.getMonth() === agora.getMonth() && dataVenda.getFullYear() === agora.getFullYear();
-    } else if(periodoSelecionadoRelatorio === 'ano') {
+    } else if(periodo === 'ano') {
       return dataVenda.getFullYear() === agora.getFullYear();
     }
     return false;
   });
+}
 
-  let faturamentoTotal = vendasFiltradas.reduce((acc, v) => acc + v.total, 0);
-  let custoTotal = vendasFiltradas.reduce((acc, v) => {
+function atualizarDadosCaixa(){
+  let vendasFiltradas = filtrarVendasPorPeriodo(periodoSelecionadoRelatorio);
+
+  // Vendas canceladas não entram no faturamento, lucro nem no ranking de mais vendidos.
+  let vendasValidas = vendasFiltradas.filter(v => !v.cancelada);
+
+  let faturamentoTotal = vendasValidas.reduce((acc, v) => acc + v.total, 0);
+  let custoTotal = vendasValidas.reduce((acc, v) => {
     let custoVenda = v.itens.reduce((sum, item) => {
       let itemCusto = item.produto ? (item.produto.precoCusto || 0) : (item.precoCusto || 0);
       let itemQtd = item.quantidade || 1;
@@ -1219,9 +1802,11 @@ function atualizarDadosCaixa(){
     return acc + custoVenda;
   }, 0);
   let lucroReal = faturamentoTotal - custoTotal;
+  let ticketMedioPeriodo = vendasValidas.length ? faturamentoTotal / vendasValidas.length : 0;
 
   document.getElementById('cxFaturamento').textContent = faturamentoTotal.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
   document.getElementById('cxLucroReal').textContent = lucroReal.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  document.getElementById('cxTicketMedioPeriodo').textContent = ticketMedioPeriodo.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 
   let cx = db.caixaAberto;
   if(cx) {
@@ -1241,153 +1826,76 @@ function atualizarDadosCaixa(){
     document.getElementById('tabelaMovimento').innerHTML = htmlMovs;
   }
 
-  let htmlVendas = vendasFiltradas.map(v => `
-    <tr>
-      <td>#${String(v.numero).padStart(4,'0')}</td>
+  renderMaisVendidos(vendasValidas);
+  renderTopClientes(vendasValidas);
+  renderGraficoVendas();
+
+  let htmlVendas = vendasFiltradas.map(v => {
+    let cancelada = !!v.cancelada;
+    let acoes = cancelada
+      ? `<span class="badge vermelho">Cancelada</span>`
+      : `<div class="grupo-botoes" style="margin:0;">
+           <button class='pequeno secundario' onclick='reimprimirVenda(${v.numero})'>🖨️</button>
+           <button class='pequeno alerta' onclick='editarVenda(${v.numero})'>Editar</button>
+           <button class='pequeno erro' onclick='estornarVenda(${v.numero})'>Estornar</button>
+         </div>`;
+    return `
+    <tr style="${cancelada ? 'opacity:0.55;' : ''}">
+      <td>#${String(v.numero).padStart(4,'0')} ${v.editada ? '<span class="badge amarelo" title="Venda editada">editada</span>' : ''}</td>
       <td>${new Date(v.data).toLocaleDateString('pt-BR')} ${new Date(v.data).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</td>
       <td>${v.cliente || 'Consumidor Final'}</td>
       <td><small>${Object.entries(v.pagamentos).filter(([_, val])=>val>0).map(([key, val])=>`${key.toUpperCase()}: R$${val.toFixed(2)}`).join(' | ')}</small></td>
-      <td><strong>${v.total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</strong></td>
+      <td><strong style="${cancelada ? 'text-decoration:line-through;' : ''}">${v.total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</strong></td>
+      <td>${acoes}</td>
     </tr>
-  `).join('');
-  document.getElementById('tabelaHistoricoVendas').innerHTML = htmlVendas || '<tr><td colspan="5" style="color:var(--cinza); text-align:center;">Nenhuma venda localizada para este período.</td></tr>';
+  `;
+  }).join('');
+  document.getElementById('tabelaHistoricoVendas').innerHTML = htmlVendas || '<tr><td colspan="6" style="color:var(--cinza); text-align:center;">Nenhuma venda localizada para este período.</td></tr>';
 }
 
-function registrarLancamento(){
-  if(!db.caixaAberto){mostrarMensagem('Erro','Abra o caixa primeiro!','erro');return}
-  let tipo = document.getElementById('tipoLancamento').value;
-  let valor = parseFloat(document.getElementById('valorLancamento').value || 0);
-  let desc = document.getElementById('descricaoLancamento').value.trim() || 'Ajuste manual';
-  if(valor<=0){mostrarMensagem('Erro','Valor inválido!','erro');return}
+/* RELATÓRIO DE PRODUTOS MAIS VENDIDOS (respeita o período selecionado acima) */
+/* RELATÓRIO DO DIA — impressão em folha A4 (não é o cupom estreito do PDV)
+   e exportação em CSV para levar ao contador/planilha. Sempre olha para o
+   dia de hoje, independente da aba de período selecionada acima. */
+function imprimirRelatorioDia(){
+  let vendasHoje = filtrarVendasPorPeriodo('hoje');
+  let vendasValidas = vendasHoje.filter(v => !v.cancelada);
+  let vendasCanceladas = vendasHoje.filter(v => v.cancelada);
 
-  db.caixaAberto.movimentos.push({hora:new Date().toISOString(), tipo:tipo, valor:valor, descricao:desc});
-  if(tipo==='entrada'){
-    db.caixaAberto.entradasFisicas += valor;
-    db.caixaAberto.saldoAtual += valor;
-  } else {
-    db.caixaAberto.saidasFisicas += valor;
-    db.caixaAberto.saldoAtual -= valor;
-  }
-  salvarDB();
-  atualizarDadosCaixa();
-  document.getElementById('valorLancamento').value='';document.getElementById('descricaoLancamento').value='';
-  mostrarMensagem('Sucesso','Movimentação física de dinheiro registrada!');
-}
+  let faturamento = vendasValidas.reduce((a,v)=>a+v.total, 0);
+  let custoTotal = vendasValidas.reduce((acc,v)=> acc + v.itens.reduce((s,i)=> s + ((i.produto.precoCusto||0) * i.quantidade), 0), 0);
+  let lucro = faturamento - custoTotal;
+  let totalDinheiro = vendasValidas.reduce((a,v)=>a+v.pagamentos.dinheiro, 0);
+  let totalPix = vendasValidas.reduce((a,v)=>a+v.pagamentos.pix, 0);
+  let totalCartao = vendasValidas.reduce((a,v)=>a+v.pagamentos.cartao, 0);
 
-function fecharCaixa(){
-  if(!db.caixaAberto){ mostrarMensagem('Erro','Não há caixa aberto para fechar!','erro'); return; }
-  let contado = parseFloat(document.getElementById('cxFechamentoContado').value || 0);
-  let esperado = db.caixaAberto.saldoAtual;
-  let diferenca = Math.round((contado - esperado) * 100) / 100;
+  let mapa = {};
+  vendasValidas.forEach(v => v.itens.forEach(item => {
+    let cod = item.produto.codigo;
+    if(!mapa[cod]) mapa[cod] = { nome: item.produto.nome, quantidade: 0, receita: 0 };
+    mapa[cod].quantidade += item.quantidade;
+    mapa[cod].receita += item.quantidade * item.produto.precoVenda;
+  }));
+  let ranking = Object.values(mapa).sort((a,b)=> b.quantidade - a.quantidade);
 
-  let statusDiferenca = diferenca === 0 ? "(Caixa Perfeito!)" : diferenca > 0 ? "(Sobrou Dinheiro)" : "(Faltou Dinheiro)";
-  let msgConferencia = `Saldo Esperado em Dinheiro: R$ ${esperado.toFixed(2)}\n` +
-    `Saldo Informado em Dinheiro: R$ ${contado.toFixed(2)}\n` +
-    `Diferença: R$ ${diferenca.toFixed(2)} ${statusDiferenca}\n\n` +
-    `Confirma o encerramento do turno?`;
+  const loja = db.configLoja;
+  const dataHoje = new Date().toLocaleDateString('pt-BR');
 
-  confirmarAcao('Fechamento de Caixa', msgConferencia, ()=>{
-    db.caixaAberto.dataFechamento = new Date().toISOString();
-    db.caixaAberto.valorContadoGaveta = contado;
-    db.caixaAberto.diferencaFechamento = diferenca;
-    db.historicoCaixa.push(JSON.parse(JSON.stringify(db.caixaAberto)));
-    db.caixaAberto = null;
-    salvarDB();
-    verificarStatusCaixa();
-    document.getElementById('cxFechamentoContado').value = '';
-    mostrarMensagem('Sucesso','Turno encerrado e guardado no histórico!');
-  }, 'Fechar Caixa');
-}
+  let linhasRanking = ranking.map((p,i)=>`
+    <tr><td>${i+1}º</td><td>${p.nome}</td><td style="text-align:center;">${p.quantidade} un</td><td>R$ ${p.receita.toFixed(2)}</td></tr>
+  `).join('') || '<tr><td colspan="4" style="text-align:center;color:#888;">Nenhuma venda hoje.</td></tr>';
 
-function atualizarSelectClientesVenda(){
-  let select = document.getElementById('vendaCliente');
-  select.innerHTML = "<option value=''>Consumidor Final</option>";
-  db.clientes.forEach(c => {
-    select.innerHTML += `<option value="${c.nome}">${c.nome} ${c.clienteCpf ? `(${c.clienteCpf})` : ''}</option>`;
-  });
-}
+  let linhasVendas = vendasValidas.map(v => `
+    <tr><td>#${String(v.numero).padStart(4,'0')}</td><td>${new Date(v.data).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</td><td>${v.cliente || 'Consumidor Final'}</td><td style="text-align:center;">${v.itens.reduce((s,i)=>s+i.quantidade,0)}</td><td>R$ ${v.total.toFixed(2)}</td></tr>
+  `).join('') || '<tr><td colspan="5" style="text-align:center;color:#888;">Nenhuma venda hoje.</td></tr>';
 
-/* GERADOR DE ETIQUETAS */
-function alternarTipoImpressora(){
-  let tipo = document.getElementById('etqTipoImpressora').value;
-  let selTamanho = document.getElementById('etqTamanho');
-  // Sugere um tamanho padrão coerente com o tipo de impressora escolhido
-  if(tipo === 'termica58' && !['30x20','38x25','40x25','40x30','50x30'].includes(selTamanho.value)){
-    selTamanho.value = '38x25';
-  } else if(tipo === 'termica80' && !['50x30','50x40','60x40','80x40','100x50'].includes(selTamanho.value)){
-    selTamanho.value = '60x40';
-  }
-}
-
-function gerarPreview(){
-  let cod = document.getElementById('etqCodigo').value.trim();
-  let qtd = parseInt(document.getElementById('etqQtd').value || 1);
-  let prod = db.produtos.find(p=>p.codigo === cod);
-  if(!prod){mostrarMensagem('Erro','Código inválido!','erro');return}
-
-  let mostrarMarca = document.getElementById('etqMarca').value === 'sim';
-  let tamanhoSel = document.getElementById('etqTamanho').value; // ex: "38x25"
-  let [largMm, altMm] = tamanhoSel.split('x').map(Number);
-  let tipoImpressora = document.getElementById('etqTipoImpressora').value;
-  let ehRolo = tipoImpressora !== 'folha';
-
-  // Escala de fonte proporcional ao tamanho da etiqueta
-  let escala = Math.min(largMm / 38, altMm / 25);
-  let fNome = Math.max(7, Math.round(9 * escala));
-  let fMarca = Math.max(6, Math.round(7 * escala));
-  let fPreco = Math.max(9, Math.round(11 * escala));
-  let alturaCodigo = Math.max(9, Math.round(10 * escala));
-
-  let htmlEtiquetas = '';
-  for(let i=0;i<qtd;i++){
-    htmlEtiquetas += `
-      <div class='etiqueta' style='width:${largMm}mm;height:${altMm}mm;'>
-        <div class='et-nome' style='font-size:${fNome}px;'>${prod.nome}</div>
-        ${mostrarMarca && prod.marca?`<div class='et-marca' style='font-size:${fMarca}px;'>${prod.marca}</div>`:''}
-        <div class='et-preco' style='font-size:${fPreco}px;'>R$ ${prod.precoVenda.toFixed(2)}</div>
-        <svg class='et-codigo'></svg>
-      </div>
-    `;
-  }
-
-  let larguraPagina = ehRolo ? (largMm + 6) : 130;
-  let classeRolo = ehRolo ? 'rolo-termico' : '';
-  document.getElementById('previewEtiquetas').innerHTML = `<div class='etiqueta-pagina ${classeRolo}' style='max-width:${larguraPagina}mm;'>${htmlEtiquetas}</div>`;
-  document.getElementById('previewEtiquetas').classList.remove('hidden');
-
-  // Gera cada código de barras individualmente, com largura de barra (module width)
-  // proporcional ao tamanho físico da etiqueta. Isso evita que o SVG nasça enorme
-  // (largura/altura padrão do JsBarcode) e seja espremido pelo CSS até virar um
-  // borrão preto — o problema visual relatado quando etiquetas pequenas eram usadas.
-  let pxPorMm = 3.78; // aprox. 96dpi
-  let larguraDisponivelPx = Math.max(20, (largMm - 4) * pxPorMm);
-  // CODE128 usa ~11 módulos por caractere + margens; estima nº de módulos:
-  let modulosEstimados = Math.max(1, prod.codigo.length) * 11 + 35;
-  let moduloPx = larguraDisponivelPx / modulosEstimados;
-  moduloPx = Math.min(2.2, Math.max(0.85, moduloPx)); // limite mínimo evita "sumir", limite máximo evita ficar grosso demais
-  let alturaBarraPx = Math.max(18, Math.round(alturaCodigo * 2.2));
-
-  document.querySelectorAll('#previewEtiquetas .et-codigo').forEach(svg=>{
-    try{
-      JsBarcode(svg, prod.codigo, {
-        format: "CODE128",
-        width: moduloPx,
-        height: alturaBarraPx,
-        displayValue: false,
-        margin: 0,
-        background: "#ffffff",
-        lineColor: "#000000"
-      });
-    }catch(e){
-      mostrarMensagem('Erro','Não foi possível gerar o código de barras para este código.','erro');
-    }
-  });
-}
-function imprimirEtiquetas(){
-  if(document.getElementById('previewEtiquetas').innerHTML.trim() !== '') window.print();
-  else mostrarMensagem('Erro','Gere o lote primeiro!','erro');
-}
-</script>
-</body>
-</html>
-
+  document.getElementById('areaRelatorio').innerHTML = `
+    <div style="text-align:center;margin-bottom:15px;border-bottom:2px solid #000;padding-bottom:12px;">
+      <div style="font-size:22px;font-weight:bold;text-transform:uppercase;">${loja.nome}</div>
+      <div style="font-size:12px;color:#333;">CNPJ: ${loja.cnpj} • ${loja.endereco}</div>
+      <div style="font-size:17px;font-weight:bold;margin-top:12px;">RELATÓRIO DE VENDAS DO DIA</div>
+      <div style="font-size:13px;">${dataHoje}</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:14px;margin:15px 0;background:#f6f6f6;padding:10px;border-radius:6px;">
+      <div><strong
+    
